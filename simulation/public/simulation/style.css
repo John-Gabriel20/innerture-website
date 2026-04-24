@@ -1,0 +1,291 @@
+:root {
+    --bg-dark: #0a0a0b;
+    --neon-cyber: #32ff7e;
+    --neon-media: #a29bfe;
+    --neon-comp: #00d2d3;
+    --glass: rgba(255, 255, 255, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 22%),
+                radial-gradient(circle at 80% 10%, rgba(255,255,255,0.03), transparent 18%),
+                linear-gradient(180deg, #09090b 0%, #070709 100%);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 140px 140px;
+    opacity: 0.16;
+    animation: gridDrift 28s linear infinite;
+    pointer-events: none;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(0, 210, 211, 0.12), transparent 18%),
+                radial-gradient(circle at 80% 15%, rgba(162, 155, 254, 0.10), transparent 14%),
+                radial-gradient(circle at 50% 85%, rgba(50, 255, 126, 0.08), transparent 16%);
+    opacity: 0.86;
+    pointer-events: none;
+}
+
+.scene-grid {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 48%, rgba(255,255,255,0.04) 50%, transparent 52%),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 210px 210px, 140px 140px, 140px 140px;
+    opacity: 0.18;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    animation: gridPulse 34s linear infinite;
+}
+
+.scene-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(1px);
+    pointer-events: none;
+    opacity: 0.28;
+    animation: floatOrb ease-in-out infinite;
+}
+
+.orb-a {
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(0,210,211,0.4), transparent 55%);
+    top: 12%;
+    left: 10%;
+    animation-duration: 19s;
+}
+
+.orb-b {
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(162,155,254,0.36), transparent 52%);
+    top: 55%;
+    right: 12%;
+    animation-duration: 22s;
+}
+
+.orb-c {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(50,255,126,0.30), transparent 50%);
+    top: 40%;
+    left: 38%;
+    animation-duration: 24s;
+}
+
+@keyframes floatOrb {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-18px) scale(1.02); }
+}
+
+@keyframes gridDrift {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: -140px -140px, 140px 140px; }
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.16; }
+    50% { opacity: 0.22; }
+}
+
+.container {
+    width: 92%;
+    max-width: 860px;
+    z-index: 2;
+}
+
+.glass-card {
+    background: rgba(10, 10, 11, 0.82);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    position: relative;
+}
+
+h1,
+h2 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.4rem;
+}
+
+.neon-btn {
+    background: transparent;
+    padding: 14px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.28s all ease;
+    margin: 0.85rem 0.5rem;
+    text-transform: uppercase;
+    z-index: 2;
+    position: relative;
+}
+
+.neon-btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-cyber { border: 2px solid var(--neon-cyber); color: var(--neon-cyber); }
+.btn-cyber:hover { background: rgba(50,255,126,0.16); color: #fff; box-shadow: 0 0 22px rgba(50,255,126,0.35); }
+
+.btn-media { border: 2px solid var(--neon-media); color: var(--neon-media); }
+.btn-media:hover { background: rgba(162,155,254,0.18); color: #fff; box-shadow: 0 0 22px rgba(162,155,254,0.35); }
+
+.btn-comp { border: 2px solid var(--neon-comp); color: var(--neon-comp); }
+.btn-comp:hover { background: rgba(0,210,211,0.18); color: #fff; box-shadow: 0 0 22px rgba(0,210,211,0.35); }
+
+#neural-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Work Tablet UI */
+.work-tablet {
+    background: #0b0c10;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 1400px;
+    width: 95%;
+    margin: 2rem auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    position: relative;
+}
+
+.tab-nav {
+    display: flex;
+    position: relative;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    padding: 1rem 2rem;
+    color: #888c99;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border-radius: 8px 8px 0 0;
+}
+
+.tab-btn:hover {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tab-slider {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.tab-content {
+    min-height: 500px;
+}
+
+.tab-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.resource-card {
+    padding: 1.5rem;
+    text-align: left;
+}
+
+.resource-card h4 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--accent);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}

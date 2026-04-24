@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Innerture | Media Simulation</title>
+    <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<body>
+    <canvas id="neural-canvas"></canvas>
+    <div class="work-tablet">
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-btn" onclick="switchTab('task')">Task Details</button>
+            <button class="tab-btn" onclick="switchTab('workspace')">Workspace</button>
+            <div class="tab-slider"></div>
+        </nav>
+        
+        <div class="tab-content">
+            <section id="overview" class="tab-section active">
+                <h2>THE URBAN PULSE: DOCUMENTARY</h2>
+                <h3>The Situation</h3>
+                <p style="color: #888c99;">You are filming a documentary about a world-renowned street artist who is mysteriously fascinating and intensely private. The interview is scheduled to be his final public appearance before he leaves the country for an undisclosed location. You have exactly 4 hours to capture his story.</p>
+                <h3>The Complication</h3>
+                <p style="color: #888c99;">Everything goes wrong. The interview location—his vibrant, colorful studio filled with artwork—suffers a massive power outage. The building is pitch black. Your portable lighting kit just died completely. You're left with: one artist, one camera, and a nearby empty parking lot. Your deadline hasn't changed.</p>
+                <h3>The Goal</h3>
+                <p style="color: #888c99;"><strong>The artist is known for being "mysterious" and shrouded in intrigue. How can you use this "Darkness" disaster to your creative advantage to make the interview look even cooler, more professional, and more aligned with his brand than a conventional studio setup would have?</strong> Transform catastrophe into artistry.</p>
+            </section>
+            
+            <section id="task" class="tab-section">
+                <h3>Strategic Challenge: Turning Darkness into an Asset</h3>
+                <p style="color: #888c99;">Your mission is to pivot this production disaster into a creative advantage. The darkness isn't a problem—it's an opportunity to amplify the artist's mystique and create a visually striking interview that aligns perfectly with his brand identity.</p>
+                <h3>Production Context</h3>
+                <ul style="text-align: left; color: #888c99;">
+                    <li><strong>Subject:</strong> Mystery street artist with a cult-like following</li>
+                    <li><strong>Brand Element:</strong> Enigmatic, underground, authentic, rebellious</li>
+                    <li><strong>Available Resources:</strong> One camera, parking lot lighting (street lamps, car lights), natural shadows</li>
+                    <li><strong>Time Pressure:</strong> 4 hours to execute idea and capture interview</li>
+                    <li><strong>Goal Alignment:</strong> The darkness should enhance, not detract from, his mysterious persona</li>
+                </ul>
+                <h3>The Filmmaking Prompt</h3>
+                <p style="color: #888c99;"><strong>Design a shooting strategy that uses darkness, shadows, and unconventional lighting as creative storytelling tools.</strong> Consider: How can silhouettes, backlighting, or high-contrast shadow work enhance rather than harm the interview? What cinematic techniques turn a power outage into a directorial choice?</p>
+            </section>
+            
+        
+            
+            <section id="workspace" class="tab-section">
+                <h3>Filming Strategy: The Urban Pulse Interview</h3>
+                <p style="color: #888c99;"><strong>Your Mission:</strong> Design a complete shooting strategy that transforms the power outage into a cinematic advantage. Make darkness and shadows work FOR the artist's mysterious brand, not against it.</p>
+                <textarea id="proposal" placeholder="Describe your filming strategy here...1. How will you position the artist (silhouette, backlighting, partial visibility)? 2. What lighting sources will you use and in what configuration? 3. How do shadows and darkness enhance his 'mysterious' brand? 4. What camera angles and framing maximize mood over clarity? 5. How will you handle audio in the outdoor parking lot setting? 6. What's your specific shot sequence for maximum impact?" rows="15" style="width: 100%; margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; font-family: inherit;"></textarea>
+                <button class="neon-btn btn-media" onclick="submitProposal()">Submit Strategy to Director</button>
+            </section>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">Analysis complete. Grit score updated.</div>
+
+    <script>
+        // Neural Network Canvas Animation
+        let scrollVelocity = 0;
+        let lastScrollY = window.scrollY || 0;
+        window.addEventListener('scroll', () => {
+            scrollVelocity = window.scrollY - lastScrollY;
+            lastScrollY = window.scrollY;
+        });
+
+        const canvas = document.getElementById("neural-canvas");
+        const ctx = canvas.getContext("2d");
+        let width, height, particles;
+
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 80; i++) particles.push(new Particle());
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                
+                // WARP SPEED EFFECT: Stretch the particle on the Y-axis based on scroll velocity
+                const stretch = Math.abs(scrollVelocity) * 0.15; 
+                
+                // Use ellipse to draw stretched particles when scrolling, standard circle when still
+                if (ctx.ellipse) {
+                    ctx.ellipse(this.x, this.y, this.size, this.size + stretch, 0, 0, Math.PI * 2);
+                } else {
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                }
+                
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                // Apply scroll velocity to physical position (moves particles with scroll)
+                this.y -= scrollVelocity * 0.2;
+
+                // Loop particles around if they go off screen during warp
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < mouse.radius) {
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= (dx / distance) * force * this.density;
+                    this.y -= (dy / distance) * force * this.density;
+                } else {
+                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 10;
+                    // Only return to baseY if we aren't heavily scrolling
+                    if (Math.abs(scrollVelocity) < 2 && this.y !== this.baseY) {
+                        this.y -= (this.y - this.baseY) / 10;
+                    }
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance/100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+
+        initCanvas();
+        animateCanvas();
+        window.addEventListener('resize', initCanvas);
+
+        // Scroll Reveal Observer
+        const observerOptions = { threshold: 0.2 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.style.opacity !== "1") {
+                    anime({
+                        targets: entry.target,
+                        translateY: [100, 0],
+                        opacity: [0, 1],
+                        duration: 1200,
+                        easing: 'easeOutExpo'
+                    });
+                }
+            });
+        }, observerOptions);
+        observer.observe(document.querySelector('.glass-card'));
+
+        // Detect user path and set accent color
+        const userPath = localStorage.getItem('userPath') || 'media';
+        const accentColors = {
+            cyber: '#32ff7e',
+            comp: '#00d2d3',
+            media: '#a29bfe'
+        };
+        document.documentElement.style.setProperty('--accent', accentColors[userPath] || '#a29bfe');
+
+        // Tab switching logic
+        function switchTab(tabId) {
+            // Hide all sections
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Animate slider
+            const activeBtn = document.querySelector('.tab-btn.active');
+            const slider = document.querySelector('.tab-slider');
+            slider.style.left = activeBtn.offsetLeft + 'px';
+            slider.style.width = activeBtn.offsetWidth + 'px';
+        }
+
+        // Submit proposal
+        function submitProposal() {
+            const proposal = document.getElementById('proposal').value.trim();
+            if (proposal.length < 50) {
+                alert('Please provide a more detailed creative technique (at least 50 characters).');
+                return;
+            }
+            
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+            
+            setTimeout(() => {
+                if (confirm('Creative solution submitted! Return to dashboard?')) {
+                    location.href = '../index.html';
+                }
+            }, 1000);
+        }
+
+        // Initialize slider position
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeBtn = document.querySelector('.tab-btn.active');
+            const slider = document.querySelector('.tab-slider');
+            if (activeBtn && slider) {
+                slider.style.left = activeBtn.offsetLeft + 'px';
+                slider.style.width = activeBtn.offsetWidth + 'px';
+            }
+        });
+    </script>
+</body>
+</html>

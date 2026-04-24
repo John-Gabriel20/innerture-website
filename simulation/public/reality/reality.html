@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innerture | Reality Feed</title>
+    <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+<canvas id="neural-canvas"></canvas>
+ 
+<nav class="sidebar">
+    <div class="sidebar-icon" onclick="navigate('simulation')">🎮</div>
+    <div class="sidebar-icon active" onclick="navigate('feed')">📡</div>
+    <div class="sidebar-icon" onclick="navigate('roadmap')">🗺️</div>
+</nav>
+ 
+<div class="work-tablet">
+ 
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('feed', event)">Reality Feed</button>
+        <button class="tab-btn" onclick="switchTab('analytics', event)">Analytics</button>
+        <div class="tab-slider"></div>
+    </nav>
+ 
+    <!-- Feed Tab -->
+    <section id="feed" class="tab-section active">
+        <div class="page-heading">
+            <div>
+                <h1>Reality Feed</h1>
+                <p>Unfiltered career signals from the field</p>
+            </div>
+            <div>
+                <span style="color:var(--text-secondary); font-size:0.85rem;">Path active:</span>
+                <div class="industry-badge" id="badge-label">—</div>
+            </div>
+        </div>
+ 
+        <div class="feed-layout">
+            <div class="feed-scroll" id="feed-scroll"></div>
+ 
+            <div class="analytics-col" id="analytics-side">
+                <div class="glass-card">
+                    <h3>Burnout Risk</h3>
+                    <div class="progress-bar"><div class="progress-fill" id="burnout-fill"></div></div>
+                    <div class="metric-value" id="burnout-value">0%</div>
+                    <div class="metric-sub">Pulse-based risk estimate from feedback trends.</div>
+                </div>
+ 
+                <div class="glass-card">
+                    <h3>Level Up</h3>
+                    <div class="metric-value" id="level-up-value">0</div>
+                    <div class="metric-sub">Current experience tier based on real reviews.</div>
+                </div>
+ 
+                <div class="glass-card">
+                    <h3>Salary Trends</h3>
+                    <div class="salary-row">
+                        <div class="salary-bar"><span>Entry</span><span id="salary-label-1">$0k</span></div>
+                        <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-1" style="width:0"></div></div>
+                        <div class="salary-bar"><span>Mid</span><span id="salary-label-2">$0k</span></div>
+                        <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-2" style="width:0"></div></div>
+                        <div class="salary-bar"><span>Senior</span><span id="salary-label-3">$0k</span></div>
+                        <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-3" style="width:0"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- Analytics Tab (full view) -->
+    <section id="analytics" class="tab-section">
+        <div class="page-heading">
+            <div>
+                <h1>Analytics</h1>
+                <p>Career metrics for your active path</p>
+            </div>
+            <div class="industry-badge" id="badge-label-2">—</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.25rem;">
+            <div class="glass-card">
+                <h3>Burnout Risk</h3>
+                <div class="progress-bar"><div class="progress-fill" id="burnout-fill-2"></div></div>
+                <div class="metric-value" id="burnout-value-2">0%</div>
+                <div class="metric-sub">Pulse-based risk estimate from feedback trends.</div>
+            </div>
+            <div class="glass-card">
+                <h3>Level Up</h3>
+                <div class="metric-value" id="level-up-value-2">0</div>
+                <div class="metric-sub">Current experience tier based on real reviews.</div>
+            </div>
+            <div class="glass-card">
+                <h3>Salary Trends</h3>
+                <div class="salary-row">
+                    <div class="salary-bar"><span>Entry</span><span id="salary-label-1b">$0k</span></div>
+                    <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-1b" style="width:0"></div></div>
+                    <div class="salary-bar"><span>Mid</span><span id="salary-label-2b">$0k</span></div>
+                    <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-2b" style="width:0"></div></div>
+                    <div class="salary-bar"><span>Senior</span><span id="salary-label-3b">$0k</span></div>
+                    <div class="salary-meter"><div class="salary-meter-fill" id="salary-bar-3b" style="width:0"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+</div>
+ 
+<div id="toast" class="toast">Feed updated for your path.</div>
+ 
+<script>
+/* ─── Neural Canvas ─── */
+let scrollVelocity = 0, lastScrollY = window.scrollY || 0;
+window.addEventListener('scroll', () => {
+    scrollVelocity = window.scrollY - lastScrollY;
+    lastScrollY = window.scrollY;
+});
+ 
+const canvas = document.getElementById('neural-canvas');
+const ctx = canvas.getContext('2d');
+let width, height, particles;
+let mouse = { x: null, y: null, radius: 160 };
+window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+ 
+let canvasRgbStr = '0,243,255';
+ 
+function initCanvas() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    particles = Array.from({length: 90}, () => new Particle());
+}
+ 
+class Particle {
+    constructor() {
+        this.x = this.baseX = Math.random() * width;
+        this.y = this.baseY = Math.random() * height;
+        this.size = Math.random() * 2 + 0.8;
+        this.density = Math.random() * 28 + 1;
+    }
+    draw() {
+        ctx.fillStyle = `rgba(${canvasRgbStr},0.55)`;
+        ctx.beginPath();
+        const stretch = Math.abs(scrollVelocity) * 0.15;
+        if (ctx.ellipse) ctx.ellipse(this.x, this.y, this.size, this.size + stretch, 0, 0, Math.PI * 2);
+        else ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath(); ctx.fill();
+    }
+    update() {
+        this.y -= scrollVelocity * 0.2;
+        if (this.y > height) this.y = 0;
+        if (this.y < 0)      this.y = height;
+        const dx = mouse.x - this.x, dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            this.x -= (dx/dist) * force * this.density;
+            this.y -= (dy/dist) * force * this.density;
+        } else {
+            if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 10;
+            if (Math.abs(scrollVelocity) < 2 && this.y !== this.baseY)
+                this.y -= (this.y - this.baseY) / 10;
+        }
+    }
+}
+ 
+function animateCanvas() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i+1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 110) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${canvasRgbStr},${(1 - dist/110)*0.38})`;
+                ctx.lineWidth = 0.6;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animateCanvas);
+}
+initCanvas(); animateCanvas();
+window.addEventListener('resize', initCanvas);
+ 
+    /* ── Tab Switching ── */
+    function switchTab(tabId, e) {
+        document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        if (e) e.target.classList.add('active');
+        const activeBtn = document.querySelector('.tab-btn.active');
+        const slider = document.querySelector('.tab-slider');
+        slider.style.left = activeBtn.offsetLeft + 'px';
+        slider.style.width = activeBtn.offsetWidth + 'px';
+    }
+ 
+    /* ── Data ── */
+    const reviews = {
+        cyber: [
+            { title: 'Junior SOC Analyst', grit: 7, salary: [65, 80, 95], quote: 'Mornings are full of false positives, but catching a real breach feels like winning the game.' },
+            { title: 'Cybersecurity Consultant', grit: 8, salary: [72, 88, 105], quote: 'Clients want quick fixes, but real defense requires patience and process.' },
+            { title: 'Penetration Tester', grit: 9, salary: [82, 98, 120], quote: 'Running a successful engagement is exhilarating, but the cleanup report is where the work really shows.' },
+            { title: 'NOC Engineer', grit: 7, salary: [60, 78, 92], quote: 'Monitoring dashboards for eight hours straight is exhausting, but the sense of control is addictive.' },
+            { title: 'Security Analyst', grit: 8, salary: [68, 83, 97], quote: 'The hardest part is explaining risk to stakeholders, not the technology itself.' }
+        ],
+        media: [
+            { title: 'Senior UX Designer', grit: 6, salary: [58, 74, 88], quote: 'The best days are when users actually smile at your flow; the worst are endless stakeholder revisions.' },
+            { title: 'Video Editor', grit: 7, salary: [62, 78, 93], quote: 'You live in timelines. Delivering a tight cut under pressure feels like an achievement.' },
+            { title: 'Content Creator', grit: 5, salary: [52, 67, 82], quote: 'One viral post can feel like magic, but most days are grinding through drafts and hashtags.' },
+            { title: 'Motion Designer', grit: 7, salary: [65, 80, 95], quote: 'Animators solve problems frame by frame; burnout comes from scope creep.' },
+            { title: 'Creative Producer', grit: 8, salary: [70, 85, 100], quote: 'Coordinating shoots and edits is a marathon, but the premiere moment is worth it.' }
+        ],
+        computing: [
+            { title: 'DevOps Engineer', grit: 8, salary: [72, 88, 105], quote: 'Infrastructure automation is satisfying, but pager duty at 3 a.m. always breaks the rhythm.' },
+            { title: 'Software Architect', grit: 7, salary: [82, 98, 115], quote: 'Designing platforms is rewarding, but maintaining legacy systems is the real test.' },
+            { title: 'Data Scientist', grit: 6, salary: [78, 92, 108], quote: 'Insights are powerful, but the data cleanup is where the job lives.' },
+            { title: 'Full Stack Engineer', grit: 7, salary: [75, 90, 108], quote: 'Building end-to-end features feels great, though balancing front-end polish and backend stability is constant.' },
+            { title: 'Cloud Engineer', grit: 8, salary: [80, 96, 112], quote: 'Cloud migrations are high stakes; one misconfigured policy can keep you up all night.' }
+        ]
+    };
+ 
+    const accentMap = {
+        cyber: '#39ff14',
+        media: '#b026ff',
+        computing: '#00f3ff'
+    };
+ 
+    const nameMap = {
+        cyber: 'Cybersecurity',
+        media: 'Creative Media',
+        computing: 'Creative Computing'
+    };
+ 
+    function getUserPath() {
+        return localStorage.getItem('userPath') || 'computing';
+    }
+ 
+    function setMetrics(pathData) {
+        const avgGrit = Math.round(pathData.reduce((s, r) => s + r.grit, 0) / pathData.length);
+        const burnout = Math.max(35, Math.min(95, 110 - avgGrit * 8));
+        const sal = pathData[0].salary;
+        const maxSal = 130;
+ 
+        // Feed tab sidebar
+        document.getElementById('burnout-fill').style.width = burnout + '%';
+        document.getElementById('burnout-value').textContent = burnout + '%';
+        document.getElementById('level-up-value').textContent = avgGrit;
+        document.getElementById('salary-bar-1').style.width = (sal[0] / maxSal * 100) + '%';
+        document.getElementById('salary-bar-2').style.width = (sal[1] / maxSal * 100) + '%';
+        document.getElementById('salary-bar-3').style.width = (sal[2] / maxSal * 100) + '%';
+        document.getElementById('salary-label-1').textContent = `$${sal[0]}k`;
+        document.getElementById('salary-label-2').textContent = `$${sal[1]}k`;
+        document.getElementById('salary-label-3').textContent = `$${sal[2]}k`;
+ 
+        // Analytics tab
+        document.getElementById('burnout-fill-2').style.width = burnout + '%';
+        document.getElementById('burnout-value-2').textContent = burnout + '%';
+        document.getElementById('level-up-value-2').textContent = avgGrit;
+        document.getElementById('salary-bar-1b').style.width = (sal[0] / maxSal * 100) + '%';
+        document.getElementById('salary-bar-2b').style.width = (sal[1] / maxSal * 100) + '%';
+        document.getElementById('salary-bar-3b').style.width = (sal[2] / maxSal * 100) + '%';
+        document.getElementById('salary-label-1b').textContent = `$${sal[0]}k`;
+        document.getElementById('salary-label-2b').textContent = `$${sal[1]}k`;
+        document.getElementById('salary-label-3b').textContent = `$${sal[2]}k`;
+    }
+ 
+    function renderFeed(path) {
+        const pathData = reviews[path] || reviews['computing'];
+        const name = nameMap[path] || 'Unknown Path';
+ 
+        document.getElementById('badge-label').textContent = name;
+        document.getElementById('badge-label-2').textContent = name;
+ 
+        const scroll = document.getElementById('feed-scroll');
+        scroll.innerHTML = '';
+ 
+        pathData.forEach((r, i) => {
+            const card = document.createElement('div');
+            card.className = 'glass-card truth-card';
+            card.style.opacity = 0;
+            card.innerHTML = `
+                <div class="avatar"></div>
+                <h3>${r.title}</h3>
+                <div class="grit-row">
+                    <span>Grit Score</span>
+                    <strong>${r.grit}/10</strong>
+                </div>
+                <p class="quote">"${r.quote}"</p>
+            `;
+            scroll.appendChild(card);
+ 
+            anime({
+                targets: card,
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 700,
+                delay: i * 120,
+                easing: 'easeOutExpo'
+            });
+        });
+ 
+        setMetrics(pathData);
+    }
+ 
+    function navigate(page) {
+        if (page === 'home') window.location.href = '../index.html';
+        if (page === 'simulation') window.location.href = '../simulation/';
+        if (page === 'feed') window.location.href = './';
+        if (page === 'roadmap') window.location.href = '../roadmap.html';
+    }
+ 
+    /* ── Init ── */
+    const path = getUserPath();
+    document.documentElement.style.setProperty('--accent', accentMap[path] || '#00f3ff');
+    renderFeed(path);
+ 
+    // Show toast
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+ 
+    // Init slider
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeBtn = document.querySelector('.tab-btn.active');
+        const slider = document.querySelector('.tab-slider');
+        if (activeBtn && slider) {
+            slider.style.left = activeBtn.offsetLeft + 'px';
+            slider.style.width = activeBtn.offsetWidth + 'px';
+        }
+    });
+ 
+    // Slider on load (runs after DOMContentLoaded in most cases)
+    setTimeout(() => {
+        const activeBtn = document.querySelector('.tab-btn.active');
+        const slider = document.querySelector('.tab-slider');
+        if (activeBtn && slider) {
+            slider.style.left = activeBtn.offsetLeft + 'px';
+            slider.style.width = activeBtn.offsetWidth + 'px';
+        }
+    }, 50);
+</script>
+</body>
+</html>

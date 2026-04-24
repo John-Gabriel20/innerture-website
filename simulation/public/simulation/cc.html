@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innerture | Creative Computing Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<body>
+    <canvas id="neural-canvas"></canvas>
+    <div class="work-tablet">
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab-btn" onclick="switchTab('task')">Task Details</button>
+            <button class="tab-btn" onclick="switchTab('workspace')">Workspace</button>
+            <div class="tab-slider"></div>
+        </nav>
+        
+        <div class="tab-content">
+            <section id="overview" class="tab-section active">
+                <h2>PROJECT AETHER: TRAVEL APP v2.0</h2>
+                <h3>The Situation</h3>
+                <p style="color: #888c99;">We just launched a flight-booking app specifically designed for seniors. Our analytics show a shocking discovery: 40% of users make it all the way to the final payment screen, then suddenly close the app without completing their purchase.</p>
+                <h3>The Complication</h3>
+                <p style="color: #888c99;">We conducted user interviews to understand the drop-off. The feedback was heartbreaking but illuminating: senior users told us they are "scared" to click the 'Pay' button because it looks too aggressive and intimidating. Even worse, they aren't sure if their seat is actually reserved yet—they're terrified they'll lose their booking or get charged twice.</p>
+                <h3>The Goal</h3>
+                <p style="color: #888c99;"><strong>Without writing new code or changing pricing, how can you change the 'Vibe' of the final payment screen to make it feel safe, clear, and encouraging?</strong> Transform anxiety into confidence.</p>
+            </section>
+            
+            <section id="task" class="tab-section">
+                <h3>Strategic Challenge: Changing the Vibe</h3>
+                <p style="color: #888c99;">Your task is to redesign the user's emotional experience at the critical moment of purchase—not through code changes, but through visual and textual psychology.</p>
+                <h3>Context & Constraints</h3>
+                <ul style="text-align: left; color: #888c99;">
+                    <li><strong>Target Demographic:</strong> Users aged 60+, less tech-savvy, risk-averse</li>
+                    <li><strong>Current Pain Points:</strong> Aggressive call-to-action button, unclear confirmation messaging, fear of double-charging</li>
+                    <li><strong>Budget:</strong> Zero code changes. Copy, layout, and visual styling only.</li>
+                    <li><strong>Timeline:</strong> Must be implementable within one business day</li>
+                </ul>
+                <h3>The Design Prompt</h3>
+                <p style="color: #888c99;"><strong>Redesign the payment screen's emotional tone and messaging</strong> to address senior users' fears. Consider: What would make you feel safe and confident? What words rebuild trust? How can the page layout communicate "your booking is secure"?</p>
+            </section>
+            
+            <section id="vault" class="tab-section">
+                <h3>Resource Library</h3>
+                <div class="resource-grid">
+                    <div class="glass-card resource-card">
+                        <h4>User Testing Insights</h4>
+                        <p style="color: #888c99;">Senior User Feedback: "Too scary to click", "What if I get charged twice?", "Where's my confirmation?"</p>
+                        <p style="color: #888c99;">Pain Point Analysis: Aggressive CTA design, missing reassurance messaging, unclear reservation status</p>
+                        <button class="neon-btn btn-comp" onclick="alert('User quotes and behavioral data loaded')">View Feedback</button>
+                    </div>
+                    <div class="glass-card resource-card">
+                        <h4>Psychological Design Principles</h4>
+                        <p style="color: #888c99;">Trust Building: Clear confirmation, reassuring language, visual safety cues</p>
+                        <p style="color: #888c99;">Call-to-Action Psychology: Soft vs. aggressive language, button color psychology, proximity anxiety reduction</p>
+                        <button class="neon-btn btn-comp" onclick="alert('Design psychology guide downloaded')">View Principles</button>
+                    </div>
+                    <div class="glass-card resource-card">
+                        <h4>Reference UI Patterns</h4>
+                        <p style="color: #888c99;">Examples: Banking interfaces (trust-focused), retirement planning apps, healthcare platforms</p>
+                        <p style="color: #888c99;">Key Elements: Two-step confirmation, progress indicators, reassurance text, accessible typography</p>
+                        <button class="neon-btn btn-comp" onclick="alert('Reference UI patterns loaded')">View Examples</button>
+                    </div>
+                    <div class="glass-card resource-card">
+                        <h4>Copy Library</h4>
+                        <p style="color: #888c99;">Current: "Complete Payment" | Trustworthy alternatives: "Secure Your Seat", "Confirm & Protect Your Booking"</p>
+                        <p style="color: #888c99;">Reassurance Messaging: "Your seat is reserved", "Your payment is encrypted", "Final step—you're safe"</p>
+                        <button class="neon-btn btn-comp" onclick="alert('Copy library loaded')">View Language Options</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="workspace" class="tab-section">
+                <h3>Design Proposal: Payment Screen Redesign</h3>
+                <p style="color: #888c99;"><strong>Your Mission:</strong> Redesign the payment screen's checkout experience (visuals, messaging, layout) to transform senior users' anxiety into confidence. No code changes—only UX, copy, and styling.</p>
+                <textarea id="proposal" placeholder="Describe your payment screen redesign approach here... 1. What emotional tone should the page convey? 2. What specific copy changes make users feel safe? 3. How should the layout and visual hierarchy change? 4. What confirmation elements eliminate doubt about reservation? 5. How do you make the 'Pay' button feel friendly instead of scary?" rows="15" style="width: 100%; margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; font-family: inherit;"></textarea>
+                <button class="neon-btn btn-comp" onclick="submitProposal()">Submit Design to Manager</button>
+            </section>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">Analysis complete. Grit score updated.</div>
+
+    <script>
+        // Neural Network Canvas Animation
+        let scrollVelocity = 0;
+        let lastScrollY = window.scrollY || 0;
+        window.addEventListener('scroll', () => {
+            scrollVelocity = window.scrollY - lastScrollY;
+            lastScrollY = window.scrollY;
+        });
+
+        const canvas = document.getElementById("neural-canvas");
+        const ctx = canvas.getContext("2d");
+        let width, height, particles;
+
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 80; i++) particles.push(new Particle());
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                
+                // WARP SPEED EFFECT: Stretch the particle on the Y-axis based on scroll velocity
+                const stretch = Math.abs(scrollVelocity) * 0.15; 
+                
+                // Use ellipse to draw stretched particles when scrolling, standard circle when still
+                if (ctx.ellipse) {
+                    ctx.ellipse(this.x, this.y, this.size, this.size + stretch, 0, 0, Math.PI * 2);
+                } else {
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                }
+                
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                // Apply scroll velocity to physical position (moves particles with scroll)
+                this.y -= scrollVelocity * 0.2;
+
+                // Loop particles around if they go off screen during warp
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < mouse.radius) {
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= (dx / distance) * force * this.density;
+                    this.y -= (dy / distance) * force * this.density;
+                } else {
+                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 10;
+                    // Only return to baseY if we aren't heavily scrolling
+                    if (Math.abs(scrollVelocity) < 2 && this.y !== this.baseY) {
+                        this.y -= (this.y - this.baseY) / 10;
+                    }
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance/100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+
+        initCanvas();
+        animateCanvas();
+        window.addEventListener('resize', initCanvas);
+
+        // Scroll Reveal Observer
+        const observerOptions = { threshold: 0.2 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target.style.opacity !== "1") {
+                    anime({
+                        targets: entry.target,
+                        translateY: [100, 0],
+                        opacity: [0, 1],
+                        duration: 1200,
+                        easing: 'easeOutExpo'
+                    });
+                }
+            });
+        }, observerOptions);
+        observer.observe(document.querySelector('.glass-card'));
+
+        // Simulation Logic
+        // Detect user path and set accent color
+        const userPath = localStorage.getItem('userPath') || 'comp';
+        const accentColors = {
+            cyber: '#32ff7e',
+            comp: '#00d2d3',
+            media: '#a29bfe'
+        };
+        document.documentElement.style.setProperty('--accent', accentColors[userPath] || '#00d2d3');
+
+        // Tab switching logic
+        function switchTab(tabId) {
+            // Hide all sections
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Animate slider
+            const activeBtn = document.querySelector('.tab-btn.active');
+            const slider = document.querySelector('.tab-slider');
+            slider.style.left = activeBtn.offsetLeft + 'px';
+            slider.style.width = activeBtn.offsetWidth + 'px';
+        }
+
+        // Submit proposal
+        function submitProposal() {
+            const proposal = document.getElementById('proposal').value.trim();
+            if (proposal.length < 50) {
+                alert('Please provide a more detailed solution (at least 50 characters).');
+                return;
+            }
+            
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+            
+            setTimeout(() => {
+                if (confirm('Solution submitted! Return to dashboard?')) {
+                    location.href = '../index.html';
+                }
+            }, 1000);
+        }
+
+        // Initialize slider position
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeBtn = document.querySelector('.tab-btn.active');
+            const slider = document.querySelector('.tab-slider');
+            if (activeBtn && slider) {
+                slider.style.left = activeBtn.offsetLeft + 'px';
+                slider.style.width = activeBtn.offsetWidth + 'px';
+            }
+        });
+    </script>
+</body>
+</html>
