@@ -1,6 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
 
-// 1. Correct initialization for the NEW @google/genai SDK
 const ai = new GoogleGenAI({ apiKey: process.env.MY_SECRET_API_KEY });
 
 export default async function handler(req, res) {
@@ -10,16 +9,22 @@ export default async function handler(req, res) {
 
     try {
         const prompt = `
-            Analyze this input: "${userText}"
-            Return a JSON object with:
-            1. "match": One of ['media', 'computing', 'cyber', 'unknown']
-            2. "accuracy": Integer (75-99, or 0 for unknown)
+            Analyze this user input: "${userText}"
+            Match their skills and interests to exactly ONE of these specific roles based on the following categories:
+            
+            - cyber: Digital Forensics, Cybersecurity Consultant, Penetration Tester, Security Analyst
+            - media: Video Editor, Content Creator, Creative Producer, Photographer/Videographer
+            - computing: Data Scientist, UX/UI Designer, Full Stack Developer, Graphic Designer
+
+            Return ONLY a valid JSON object with the following keys:
+            1. "category": Must be strictly one of ['media', 'computing', 'cyber', 'unknown']
+            2. "role": The exact specific job title from the list above (or "Unknown Input")
+            3. "accuracy": Integer between 75-99 representing match confidence (or 0 for unknown)
+            4. "reason": A short, punchy 1-sentence explanation of why they match this specific role based on what they typed.
             
             CRITICAL: Return ONLY valid JSON. Do not use markdown formatting, do not use backticks, and do not include any other words.
         `;
 
-        // 2. Correct function call for the NEW SDK (no "getGenerativeModel")
-        // We removed the buggy config rules that caused the 400 errors.
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
@@ -28,11 +33,7 @@ export default async function handler(req, res) {
             }
         });
 
-        // 3. Extract the text (It's a property now, not a function)
         let rawText = response.text;
-        console.log("Raw AI Output:", rawText);
-
-        // 4. Safety net: Strip out markdown backticks just in case the AI ignores the rule
         rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
 
         try {
@@ -40,7 +41,7 @@ export default async function handler(req, res) {
             res.status(200).json(cleanData);
         } catch (parseError) {
             console.error("Failed to parse JSON, falling back.", parseError);
-            res.status(200).json({ match: "unknown", accuracy: 0 });
+            res.status(200).json({ category: "unknown", role: "Unknown Input", accuracy: 0, reason: "Error parsing the neural response." });
         }
 
     } catch (error) {

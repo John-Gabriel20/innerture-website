@@ -3,8 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputField = document.getElementById("strength-input");
     const analyzeBtn = document.getElementById("analyze-btn");
     const resultArea = document.getElementById("result-area");
-    const pathTitle = document.getElementById("path-title");
-    const pathDesc = document.getElementById("path-desc");
+    const roleCategory = document.getElementById("role-category");
+    const roleTitle = document.getElementById("role-title");
+    const roleReason = document.getElementById("role-reason");
     const matchPercent = document.getElementById("match-percent");
     const glassCards = document.querySelectorAll(".glass-card");
     const heroBtn = document.querySelector('.primary-btn');
@@ -12,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 2. GLOBAL DATA & CONFIG ---
     const paths = {
-        media: { title: "Creative Media", color: "#b026ff", desc: "Your strengths align with visual storytelling and design. Experience a simulation in high-pressure brand identity." },
-        computing: { title: "Creative Computing", color: "#00f3ff", desc: "You have a logical, building-oriented mindset. Debug a game engine before launch." },
-        cyber: { title: "Cybersecurity", color: "#39ff14", desc: "You think like an investigator and a protector. Block a brute force attack in real-time." },
-        unknown: { title: "Unrecognized Input", color: "#ff3333", desc: "Our neural net couldn't map that to our core paths. We currently support Media, Computing, and Cyber. Try another strength." }
+        media: { title: "Creative Media", color: "#b026ff" },
+        computing: { title: "Creative Computing", color: "#00f3ff" },
+        cyber: { title: "Cybersecurity", color: "#39ff14" },
+        unknown: { title: "Unrecognized Input", color: "#ff3333" }
     };
 
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
@@ -27,12 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
-        let rawVelocity = currentScrollY - lastScrollY;
-        scrollVelocity = Math.max(-80, Math.min(80, rawVelocity)); // Velocity cap for warp effect
+        scrollVelocity = Math.max(-80, Math.min(80, currentScrollY - lastScrollY));
         lastScrollY = currentScrollY;
 
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = (currentScrollY / scrollHeight) * 100;
+        const scrollPercent = (currentScrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
         if(progressBar) progressBar.style.width = `${scrollPercent}%`;
 
         clearTimeout(scrollTimeout);
@@ -63,20 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
         draw() {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.beginPath();
-            const stretch = Math.abs(scrollVelocity) * 0.15;
-            if (ctx.ellipse) ctx.ellipse(this.x, this.y, this.size, this.size + stretch, 0, 0, Math.PI * 2);
+            if (ctx.ellipse) ctx.ellipse(this.x, this.y, this.size, this.size + Math.abs(scrollVelocity) * 0.15, 0, 0, Math.PI * 2);
             else ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
         }
         update() {
             this.y -= scrollVelocity * 0.2;
             if (this.y > height) this.y = 0; if (this.y < 0) this.y = height;
-            let dx = mouse.x - this.x; let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < mouse.radius) {
-                let force = (mouse.radius - distance) / mouse.radius;
-                this.x -= (dx / distance) * force * this.density;
-                this.y -= (dy / distance) * force * this.density;
+            let dx = mouse.x - this.x, dy = mouse.y - this.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+                let force = (mouse.radius - dist) / mouse.radius;
+                this.x -= (dx / dist) * force * this.density;
+                this.y -= (dy / dist) * force * this.density;
             } else {
                 this.x -= (this.x - this.baseX) / 10;
                 if (Math.abs(scrollVelocity) < 2) this.y -= (this.y - this.baseY) / 10;
@@ -89,8 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         particles.forEach((p, i) => {
             p.update(); p.draw();
             for (let j = i; j < particles.length; j++) {
-                let dx = p.x - particles[j].x, dy = p.y - particles[j].y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
+                let dx = p.x - particles[j].x, dy = p.y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < 100) {
                     ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist/100})`;
                     ctx.lineWidth = 0.5; ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
@@ -129,23 +126,29 @@ document.addEventListener("DOMContentLoaded", () => {
             
             pulse.pause();
             cipherEffect(analyzeBtn, "ANALYZE");
-            renderResult(paths[data.match] || paths.unknown, data.accuracy);
+            renderResult(data);
 
         } catch (error) {
             console.error("AI Error:", error);
             pulse.pause();
             cipherEffect(analyzeBtn, "OFFLINE");
-            renderResult(paths.unknown, 0);
+            renderResult({ category: "unknown", role: "Connection Lost", accuracy: 0, reason: "Could not connect to the Innerture neural net." });
         }
     }
 
-    function renderResult(pathData, score) {
+    function renderResult(data) {
+        const pathData = paths[data.category] || paths.unknown;
         resultArea.classList.remove("hidden");
+        
+        // Apply category specific branding colors
         document.documentElement.style.setProperty('--active-accent', pathData.color);
-        cipherEffect(pathTitle, pathData.title);
-        pathDesc.innerText = pathData.desc;
+        
+        // Populate the specific role data
+        roleCategory.innerText = pathData.title;
+        cipherEffect(roleTitle, data.role);
+        roleReason.innerText = `"${data.reason}"`;
 
-        if (pathData.title === "Unrecognized Input") {
+        if (data.category === "unknown") {
             document.getElementById('match-progress').style.width = '0%';
             matchPercent.innerText = "0";
             document.getElementById('start-sim-btn').style.opacity = 0;
@@ -155,9 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const counterObj = { val: 0 };
         anime.timeline({ easing: 'easeOutExpo' })
             .add({ targets: resultArea, opacity: [0, 1], translateY: [20, 0], duration: 600 })
-            .add({ targets: '#match-progress', width: ['0%', `${score}%`], duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=200')
+            .add({ targets: '#match-progress', width: ['0%', `${data.accuracy}%`], duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=200')
             .add({
-                targets: counterObj, val: score, round: 1, duration: 1500, update: () => { matchPercent.innerText = counterObj.val; }
+                targets: counterObj, val: data.accuracy, round: 1, duration: 1500, update: () => { matchPercent.innerText = counterObj.val; }
             }, '-=1500')
             .add({ targets: '#start-sim-btn', scale: [0.8, 1], opacity: [0, 1], easing: 'spring(1, 80, 10, 0)' }, '-=800');
     }
@@ -176,7 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 30);
     }
 
-    // Magnetic Button & Shockwave
     heroBtn.addEventListener('mousemove', (e) => {
         const rect = heroBtn.getBoundingClientRect();
         anime({ targets: heroBtn, translateX: (e.clientX - rect.left - rect.width/2) * 0.3, translateY: (e.clientY - rect.top - rect.height/2) * 0.3, scale: 1.05, duration: 100 });
@@ -192,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .add({ targets: wave, scale: [0, 150], opacity: [1, 0], duration: 800, easing: 'easeOutExpo' }, '-=600');
     });
 
-    // 3D Card Parallax
     document.addEventListener("mousemove", (e) => {
         let xAxis = (window.innerWidth / 2 - e.pageX) / 50;
         let yAxis = (window.innerHeight / 2 - e.pageY) / 50;
