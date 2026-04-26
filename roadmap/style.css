@@ -1,0 +1,100 @@
+/* --- Variables & Core Setup --- */
+:root {
+    --bg-dark: #0b0c10;
+    --text-main: #e2e2e2;
+    --text-muted: #888c99;
+    --theme-color: #39ff14; /* Defaults to Cyber Green, changed via JS */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow-x: hidden;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+}
+
+/* --- Typography & Nav --- */
+.theme-text { color: var(--theme-color); text-shadow: 0 0 15px var(--theme-color); transition: color 0.5s, text-shadow 0.5s; }
+
+.roadmap-nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem 5%; }
+.logo { font-weight: 800; letter-spacing: 2px; }
+.back-btn { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.back-btn:hover { color: var(--text-main); }
+
+/* --- Roadmap Header --- */
+.roadmap-header { text-align: center; max-width: 800px; margin: 2rem auto 4rem; padding: 0 1rem; }
+.category-badge {
+    display: inline-block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+    border: 1px solid var(--theme-color); color: var(--theme-color);
+    padding: 0.4rem 1rem; border-radius: 30px; margin-bottom: 1rem;
+    transition: color 0.5s, border-color 0.5s;
+}
+.roadmap-header h1 { font-size: 3rem; margin-bottom: 1rem; }
+.roadmap-header p { color: var(--text-muted); font-size: 1.1rem; }
+
+/* Global Progress Bar */
+.global-progress { margin-top: 3rem; background: var(--glass-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--glass-border); }
+.progress-info { display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-weight: 600; }
+.progress-track { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: var(--theme-color); box-shadow: 0 0 10px var(--theme-color); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s, box-shadow 0.5s; }
+
+/* --- Timeline Architecture --- */
+.timeline-container { position: relative; max-width: 900px; margin: 0 auto 5rem; padding: 0 1rem; }
+.timeline-line { position: absolute; top: 0; bottom: 0; left: 50px; width: 2px; background: var(--glass-border); }
+
+/* Glass Cards */
+.timeline-node { position: relative; margin-bottom: 3rem; padding-left: 100px; opacity: 0; animation: fadeUp 0.6s forwards ease-out; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(30px); } }
+
+.node-marker {
+    position: absolute; left: 35px; top: 20px; width: 32px; height: 32px; border-radius: 50%;
+    background: var(--bg-dark); border: 2px solid var(--theme-color); color: var(--theme-color);
+    display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 2; transition: all 0.4s ease;
+}
+.glass-card .node-content {
+    background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border); border-radius: 16px; padding: 2rem; transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.glass-card .node-content:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.15); }
+
+.node-type { color: var(--theme-color); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.timeline-node h2 { margin: 0.5rem 0 1rem; font-size: 1.5rem; }
+.timeline-node p { color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; }
+
+/* Links & Buttons */
+.resource-link {
+    display: inline-block; color: #fff; text-decoration: none; font-size: 0.9rem; margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--theme-color); padding-bottom: 2px; transition: color 0.3s;
+}
+.resource-link:hover { color: var(--theme-color); }
+
+.complete-btn {
+    background: transparent; color: var(--text-main); border: 1px solid var(--glass-border); border-radius: 6px;
+    padding: 0.8rem 1.5rem; cursor: pointer; font-weight: 600; transition: all 0.3s ease;
+}
+.complete-btn:hover { background: rgba(255,255,255,0.05); }
+.complete-btn.completed {
+    background: var(--theme-color); color: var(--bg-dark); border-color: var(--theme-color);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); pointer-events: none; font-weight: bold;
+}
+
+/* Completed State Styling */
+.timeline-node.is-completed .node-marker { background: var(--theme-color); color: var(--bg-dark); box-shadow: 0 0 15px var(--theme-color); }
+.timeline-node.is-completed .node-content { border-color: rgba(255, 255, 255, 0.2); }
+
+/* --- Level Up Toast --- */
+.toast {
+    position: fixed; bottom: 30px; right: 30px; background: rgba(11, 12, 16, 0.95); backdrop-filter: blur(10px);
+    border: 1px solid var(--theme-color); border-radius: 12px; padding: 1.2rem; z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(255, 255, 255, 0.1);
+    transform: translateY(100px); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-content { display: flex; align-items: center; gap: 1rem; }
+.toast-icon { font-size: 2rem; }
+.toast h4 { color: var(--theme-color); margin: 0 0 0.2rem; font-size: 1.1rem; letter-spacing: 1px; }
+.toast p { color: var(--text-main); margin: 0; font-size: 0.9rem; }

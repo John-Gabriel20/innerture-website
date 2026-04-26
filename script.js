@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // --- 1. DOM ELEMENTS ---
     const inputField = document.getElementById("strength-input");
     const analyzeBtn = document.getElementById("analyze-btn");
     const resultArea = document.getElementById("result-area");
@@ -10,8 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const glassCards = document.querySelectorAll(".glass-card");
     const heroBtn = document.querySelector('.primary-btn');
     const progressBar = document.querySelector('.scroll-progress');
+    const startSimBtn = document.getElementById("start-sim-btn"); 
 
-    // --- 2. GLOBAL DATA & CONFIG ---
+    let currentRoleSlug = ""; 
+
     const paths = {
         media: { title: "Creative Media", color: "#b026ff" },
         computing: { title: "Creative Computing", color: "#00f3ff" },
@@ -21,7 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
 
-    // --- 3. SCROLL & VELOCITY TRACKING ---
+    const slugify = (text) => {
+        return text.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '_')
+            .replace(/(^_|_$)+/g, '');
+    };
+
     let scrollVelocity = 0;
     let lastScrollY = window.scrollY;
     let scrollTimeout;
@@ -38,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scrollTimeout = setTimeout(() => { scrollVelocity = 0; }, 50);
     });
 
-    // --- 4. THE NEURAL MATRIX (Canvas) ---
     const canvas = document.getElementById("neural-canvas");
     const ctx = canvas.getContext("2d");
     let width, height, particles;
@@ -99,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initCanvas(); animateCanvas();
     window.addEventListener('resize', initCanvas);
 
-    // --- 5. THE AI DISCOVERY ENGINE ---
     async function triggerAnalysis() {
         const text = inputField.value.trim();
         if (!text) {
@@ -115,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch('/api/analyze', {
+            const response = await fetch('/api/analyze.js', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userInput: text })
@@ -140,10 +144,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const pathData = paths[data.category] || paths.unknown;
         resultArea.classList.remove("hidden");
         
-        // Apply category specific branding colors
+        if(data.role) {
+            currentRoleSlug = slugify(data.role);
+        }
+        
         document.documentElement.style.setProperty('--active-accent', pathData.color);
         
-        // Populate the specific role data
         roleCategory.innerText = pathData.title;
         cipherEffect(roleTitle, data.role);
         roleReason.innerText = `"${data.reason}"`;
@@ -151,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.category === "unknown") {
             document.getElementById('match-progress').style.width = '0%';
             matchPercent.innerText = "0";
-            document.getElementById('start-sim-btn').style.opacity = 0;
+            startSimBtn.style.opacity = 0;
             return;
         }
 
@@ -165,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .add({ targets: '#start-sim-btn', scale: [0.8, 1], opacity: [0, 1], easing: 'spring(1, 80, 10, 0)' }, '-=800');
     }
 
-    // --- 6. INTERACTIVE UTILITIES ---
     function cipherEffect(element, finalString) {
         let iteration = 0;
         clearInterval(element.dataset.intervalId);
@@ -204,7 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // --- 7. LISTENERS & BOOT ---
     analyzeBtn.addEventListener("click", triggerAnalysis);
     inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") triggerAnalysis(); });
 
@@ -212,4 +216,12 @@ document.addEventListener("DOMContentLoaded", () => {
         .add({ targets: 'nav', translateY: [-50, 0], opacity: [0, 1], duration: 1000 })
         .add({ targets: '.hero-content h1', translateY: [30, 0], opacity: [0, 1], duration: 1000 }, '-=600')
         .add({ targets: '#discovery .glass-card', scale: [0.8, 1], opacity: [0, 1], duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=800');
+
+    startSimBtn.addEventListener('click', () => {
+        if (currentRoleSlug) {
+            localStorage.setItem('userPath', currentRoleSlug);
+            
+            window.location.href = 'app/simulation/sim.html';
+        }
+    });    
 });
