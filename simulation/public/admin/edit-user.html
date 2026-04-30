@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+ 
+        :root {
+            --bg: #0b0c10;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.09);
+            --text-primary: #f0f0f0;
+            --text-secondary: #777;
+            --accent: #ffffff;
+            --radius: 6px;
+            --font: 'Chakra Petch', sans-serif;
+        }
+ 
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+ 
+        /* ── Animated canvas ── */
+        #neural-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+ 
+        nav.top-nav {
+            position:relative; z-index:10;
+            width:100%;
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center;
+            padding:1.4rem 5%;
+            flex-shrink:0;
+            border-bottom:1px solid var(--border);
+            backdrop-filter:blur(8px);
+        }
+        .logo {
+            font-family: "Asimovian", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size:1.5rem; 
+            font-weight:800;
+            letter-spacing:4px; color:#fff; text-transform:uppercase;
+        }
+        .logo span { 
+            color:var(--accent); 
+        }
+ 
+        /* ── Shell ── */
+        main.shell {
+            position: relative;
+            z-index: 10;
+            max-width: 860px;
+            margin: 52px auto;
+            padding: 0 24px;
+        }
+ 
+        /* ── Page header ── */
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+ 
+        .eyebrow {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+ 
+        .page-header h1 {
+            font-family: var(--font);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text-primary);
+        }
+ 
+        .primary-btn,
+        .secondary-btn,
+        .danger-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+ 
+        .primary-btn {
+            background: var(--text-primary);
+            color: #0b0c10;
+            border: 1px solid var(--text-primary);
+        }
+        .primary-btn:hover { 
+            background: var(--accent);
+            color: var(--bg);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .primary-btn:active { 
+            background: #b8b8b8; 
+            border-color: #b8b8b8; 
+        }
+ 
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .secondary-btn:hover { 
+            background: var(--surface-hover); 
+        }
+        .secondary-btn:active { 
+            background: rgba(255,255,255,0.12); 
+        }
+ 
+        .danger-btn {
+            background: transparent;
+            color: #ff5555;
+            border: 1px solid rgba(255, 85, 85, 0.28);
+        }
+        .danger-btn:hover { 
+            background: rgba(255, 85, 85, 0.1); 
+        }
+        .danger-btn:active { 
+            background: rgba(255, 85, 85, 0.18); 
+        }
+ 
+        /* ── Glass card ── */
+        .glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        #editUserForm{
+            width: 100%;
+            border-collapse: collapse;
+            padding: 15px;
+            text-align: center;
+            justify-content: center;
+            margin: auto;
+        }
+
+        input{
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 1.5rem;
+            gap: 10px;
+            margin: 20px;
+            font-family: var(--font);
+
+        }
+        /* ── Action group ── */
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+ 
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 52px 20px !important;
+            font-size: 13px;
+            letter-spacing: 0.04em;
+        }
+    </style>
+</head>
+<body class="admin-page">
+    <canvas id="neural-canvas"></canvas>
+    <div class="scroll-progress"></div>
+
+    <nav class="top-nav">
+        <div class="logo">INNER<span>TURE</span></div>
+    </nav>
+
+    <main class="shell">
+        <div class="work-tablet admin-shell">
+            <header class="page-header">
+                <div>
+                    <span class="eyebrow">User Control</span>
+                    <h1>Edit User</h1>
+                </div>
+                <a class="primary-btn" href="index.html">← Back to Users</a>
+            </header>
+            <section class="admin-card form-card glass-card">
+                <form id="editUserForm">
+                    <input type="hidden" id="userId">
+                    
+                    <input type="text" id="name" placeholder="Name" required><br>
+                    <input type="email" id="email" placeholder="Email" required><br>
+                    <input type="password" id="password" placeholder="Password" required><br>
+                    <button type="submit" class="primary-btn">Edit User</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
