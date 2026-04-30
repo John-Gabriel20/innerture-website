@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initCanvas() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        particles = Array.from({ length: 75 }, () => ({
+        particles = Array.from({ length: 80 }, () => ({
             x: Math.random() * width,
             y: Math.random() * height,
             baseX: Math.random() * width,

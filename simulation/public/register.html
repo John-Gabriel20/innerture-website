@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -127,41 +127,16 @@
             color: white;
             box-shadow: 0 0 20px rgba(143,109,255,0.25);
         }
-
-        .sec-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font);
-            font-size: 30px;
-            font-weight: 600;
-            background: transparent;
-            color: #8f6dff;
-            border: 1px solid #8f6dff;
-            text-decoration: none;
-            padding: 8px 20px;
-            margin: 20px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.3s ease-in-out;
-        }
-
-        .sec-btn:hover { 
-            background: #8f6dff;
-            color: white;
-            box-shadow: 0 0 20px rgba(143,109,255,0.25);
-        }
         /* ── Glass card ── */
         .glass-card {
-            background: transparent;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 10px;
             overflow: hidden;
             backdrop-filter: blur(8px);
         }
 
-        #loginForm{
+        #registerForm{
             width: 100%;
             border-collapse: collapse;
             padding: 15px;
@@ -215,18 +190,20 @@
     <main class="shell">
         <div class="work-tablet admin-shell">
             <section class="admin-card form-card glass-card">
-                <form id="loginForm">
-                    <h2>Login</h2>
+                <form id="registerForm">
+                    <h2>Register</h2>
                     
+                    <input type="text" id="name" placeholder="Name" required><br>
                     <input type="email" id="email" placeholder="Email" required><br>
                     <input type="password" id="password" placeholder="Password" required><br>
-                    <button type="submit" class="primary-btn">Login</button>
-                    <button type = "button" id = "goToRegister" class = "sec-btn">Register</button>
+                    <button type = "submit" class = "primary-btn" href = "">Register</button>
                 </form>
             </section>
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="script.js">
+        
+    </script>
 </body>
 </html>
