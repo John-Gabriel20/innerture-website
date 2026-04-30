@@ -45,13 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const canvas = document.getElementById("neural-canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas ? canvas.getContext("2d") : null;
     let width, height, particles;
     let mouse = { x: null, y: null, radius: 150 };
 
     window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
 
     function initCanvas() {
+        if (!canvas || !ctx) return;
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
         particles = Array.from({ length: 80 }, () => new Particle());
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function animateCanvas() {
+        if (!ctx) return;
         ctx.clearRect(0, 0, width, height);
         particles.forEach((p, i) => {
             p.update(); p.draw();
@@ -101,8 +103,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         requestAnimationFrame(animateCanvas);
     }
-    initCanvas(); animateCanvas();
-    window.addEventListener('resize', initCanvas);
+    if (canvas && ctx) {
+        initCanvas(); animateCanvas();
+        window.addEventListener('resize', initCanvas);
+    }
 
     async function triggerAnalysis() {
         const text = inputField.value.trim();
@@ -184,20 +188,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 30);
     }
 
-    heroBtn.addEventListener('mousemove', (e) => {
-        const rect = heroBtn.getBoundingClientRect();
-        anime({ targets: heroBtn, translateX: (e.clientX - rect.left - rect.width/2) * 0.3, translateY: (e.clientY - rect.top - rect.height/2) * 0.3, scale: 1.05, duration: 100 });
-    });
-    heroBtn.addEventListener('mouseleave', () => anime({ targets: heroBtn, translateX: 0, translateY: 0, scale: 1, duration: 1000, easing: 'easeOutElastic(1, .5)' }));
-    heroBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const wave = document.createElement('div'); wave.classList.add('shockwave');
-        wave.style.left = e.clientX + 'px'; wave.style.top = e.clientY + 'px';
-        document.body.appendChild(wave);
-        anime.timeline({ complete: () => { wave.remove(); document.querySelector('#discovery').scrollIntoView({ behavior: 'smooth' }); }})
-            .add({ targets: heroBtn, scale: [1, 0.8, 1.1, 1], duration: 600 })
-            .add({ targets: wave, scale: [0, 150], opacity: [1, 0], duration: 800, easing: 'easeOutExpo' }, '-=600');
-    });
+    if (heroBtn) {
+        heroBtn.addEventListener('mousemove', (e) => {
+            const rect = heroBtn.getBoundingClientRect();
+            anime({ targets: heroBtn, translateX: (e.clientX - rect.left - rect.width/2) * 0.3, translateY: (e.clientY - rect.top - rect.height/2) * 0.3, scale: 1.05, duration: 100 });
+        });
+        heroBtn.addEventListener('mouseleave', () => anime({ targets: heroBtn, translateX: 0, translateY: 0, scale: 1, duration: 1000, easing: 'easeOutElastic(1, .5)' }));
+        heroBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const wave = document.createElement('div'); wave.classList.add('shockwave');
+            wave.style.left = e.clientX + 'px'; wave.style.top = e.clientY + 'px';
+            document.body.appendChild(wave);
+            anime.timeline({ complete: () => { wave.remove(); const discovery = document.querySelector('#discovery'); if (discovery) discovery.scrollIntoView({ behavior: 'smooth' }); }})
+                .add({ targets: heroBtn, scale: [1, 0.8, 1.1, 1], duration: 600 })
+                .add({ targets: wave, scale: [0, 150], opacity: [1, 0], duration: 800, easing: 'easeOutExpo' }, '-=600');
+        });
+    }
 
     document.addEventListener("mousemove", (e) => {
         let xAxis = (window.innerWidth / 2 - e.pageX) / 50;
@@ -209,19 +215,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    analyzeBtn.addEventListener("click", triggerAnalysis);
-    inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") triggerAnalysis(); });
+    if (analyzeBtn && inputField) {
+        analyzeBtn.addEventListener("click", triggerAnalysis);
+        inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") triggerAnalysis(); });
+    }
 
     anime.timeline({ easing: 'easeOutExpo' })
         .add({ targets: 'nav', translateY: [-50, 0], opacity: [0, 1], duration: 1000 })
         .add({ targets: '.hero-content h1', translateY: [30, 0], opacity: [0, 1], duration: 1000 }, '-=600')
         .add({ targets: '#discovery .glass-card', scale: [0.8, 1], opacity: [0, 1], duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=800');
 
-    startSimBtn.addEventListener('click', () => {
-        if (currentRoleSlug) {
-            localStorage.setItem('userPath', currentRoleSlug);
-            
-            window.location.href = 'app/simulation/sim.html';
-        }
-    });    
+    if (startSimBtn) {
+        startSimBtn.addEventListener('click', () => {
+            if (currentRoleSlug) {
+                localStorage.setItem('userPath', currentRoleSlug);
+                window.location.href = 'app/simulation/sim.html';
+            }
+        });
+    }
 });

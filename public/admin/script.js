@@ -3,10 +3,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadUsers();
     }
 
-    initBackgroundCanvas();
-
     if (document.getElementById('addUserForm')) {
-        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+        document.getElementByIdd('addUserForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -90,74 +88,4 @@ async function deleteUser(id) {
         });
         window.location.reload();
     }
-}
-
-function initBackgroundCanvas() {
-    const canvas = document.getElementById('neural-canvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-    const particles = Array.from({ length: 80 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        baseX: Math.random() * width,
-        baseY: Math.random() * height,
-        size: Math.random() * 1.6 + 0.8,
-        density: Math.random() * 24 + 2
-    }));
-    const particleColor = '255,255,255';
-    const mouse = { x: null, y: null, radius: 160 };
-
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
-
-    window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    });
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach((p, index) => {
-            const dx = mouse.x !== null ? mouse.x - p.x : 0;
-            const dy = mouse.y !== null ? mouse.y - p.y : 0;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (mouse.x !== null && dist < mouse.radius) {
-                const force = (mouse.radius - dist) / mouse.radius;
-                p.x -= (dx / dist) * force * p.density;
-                p.y -= (dy / dist) * force * p.density;
-            } else {
-                p.x += (p.baseX - p.x) / 14;
-                p.y += (p.baseY - p.y) / 14;
-            }
-
-            ctx.fillStyle = `rgba(${particleColor}, 0.4)`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-
-            for (let j = index + 1; j < particles.length; j++) {
-                const q = particles[j];
-                const dx2 = p.x - q.x;
-                const dy2 = p.y - q.y;
-                const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-                if (dist2 < 115) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(${particleColor}, ${1 - dist2 / 115})`;
-                    ctx.lineWidth = 0.4;
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(q.x, q.y);
-                    ctx.stroke();
-                }
-            }
-        });
-        requestAnimationFrame(animate);
-    }
-
-    animate();
 }

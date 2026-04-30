@@ -4,25 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
-<body>
-    <div class="admin-container">
-        <h2>Admin Panel</h2>
-        <a href="add-user.html">Add User</a>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="userTableBody">
-                <!-- User rows will be inserted here -->
-            </tbody>
-        </table>
-    </div>
+<body class="admin-page">
+    <canvas id="neural-canvas"></canvas>
+    <div class="scroll-progress"></div>
+    <nav class="top-nav">
+        <div class="logo">INNER<span>TURE</span></div>
+        <ul class="nav-links">
+            <li><a href="add-user.html">Add User</a></li>
+            <li><a href="index.html">Users</a></li>
+        </ul>
+    </nav>
+    <main class="shell">
+        <div class="work-tablet admin-shell">
+            <header class="page-header">
+                <div>
+                    <span class="eyebrow">Admin Dashboard</span>
+                    <h1>Manage Users</h1>
+                    <p>Monitor platform access with an interface inspired by the simulation and reality experiences.</p>
+                </div>
+                <a class="neon-btn primary-btn" href="add-user.html">Add New User</a>
+            </header>
+            <section class="admin-card glass-card">
+                <div class="table-description">
+                    <p>All active users are displayed below. Use each action to edit or remove accounts.</p>
+                </div>
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- User rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="../../script.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
