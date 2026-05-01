@@ -13,19 +13,21 @@
             margin: 0;
             padding: 0;
         }
- 
+
         :root {
             --bg: #0b0c10;
-            --surface: rgba(255, 255, 255, 0.04);
-            --surface-hover: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.09);
+            --surface: rgba(255,255,255,0.04);
+            --surface-hover: rgba(255,255,255,0.07);
+            --border: rgba(255,255,255,0.09);
+            --border-focus: rgba(143,109,255,0.6);
             --text-primary: #f0f0f0;
-            --text-secondary: #777;
-            --accent: #ffffff;
-            --radius: 6px;
+            --text-secondary: #666;
+            --accent: #8f6dff;
+            --accent-glow: rgba(143,109,255,0.35);
+            --radius: 8px;
             --font: 'Chakra Petch', sans-serif;
         }
- 
+
         html, body {
             height: 100%;
             background: var(--bg);
@@ -35,202 +37,297 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
- 
-        /* ── Animated canvas ── */
+
+        /* ── Starfield canvas ── */
         #neural-canvas {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
         }
- 
+
+        /* ── Nav ── */
         nav.top-nav {
-            position:relative; z-index:10;
-            width:100%;
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center;
-            padding:1.4rem 5%;
-            flex-shrink:0;
-            border-bottom:1px solid var(--border);
-            backdrop-filter:blur(8px);
-        }
-        .logo {
-            font-family: "Asimovian", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-            font-size:1.5rem; 
-            font-weight:800;
-            letter-spacing:4px; color:#fff; text-transform:uppercase;
-        }
-        .logo span { 
-            color:var(--accent); 
-        }
- 
-        /* ── Shell ── */
-        main.shell {
             position: relative;
             z-index: 10;
-            max-width: 860px;
-            margin: 52px auto;
-            padding: 0 24px;
-        }
- 
-        /* ── Page header ── */
-        .page-header {
+            width: 100%;
             display: flex;
-            align-items: flex-end;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 32px;
+            align-items: center;
+            padding: 1.4rem 5%;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(8px);
         }
- 
-        .eyebrow {
-            display: block;
+
+        .logo {
+            font-family: "Asimovian", sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav-label {
             font-size: 10px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin-bottom: 6px;
         }
- 
-        .page-header h1 {
-            font-family: var(--font);
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            color: var(--text-primary);
-        }
- 
-        .primary-btn,
-        .secondary-btn,
-        .danger-btn {
-            display: inline-flex;
+
+        /* ── Center layout ── */
+        .page-center {
+            position: relative;
+            z-index: 10;
+            min-height: calc(100vh - 65px);
+            display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 24px;
+        }
+
+        /* ── Card ── */
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255,255,255,0.035);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 40px 36px 32px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset,
+                        0 40px 80px rgba(0,0,0,0.5);
+            animation: fadeUp 0.5s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Eyebrow ── */
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+        .eyebrow::before {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .auth-card h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .auth-card .subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        /* ── Fields ── */
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 7px;
+        }
+
+        .field-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            width: 15px;
+            height: 15px;
+            opacity: 0.4;
+            pointer-events: none;
+            flex-shrink: 0;
+        }
+
+        .field-wrap input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 13px;
+            padding: 12px 14px 12px 40px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .field-wrap input::placeholder {
+            color: #3a3a50;
+        }
+
+        .field-wrap input:focus {
+            border-color: var(--border-focus);
+            background: rgba(143,109,255,0.06);
+            box-shadow: 0 0 0 3px rgba(143,109,255,0.12);
+        }
+
+        /* ── Error ── */
+        .error-msg {
+            font-size: 11px;
+            color: #ff4d4d;
+            margin-bottom: 14px;
+            display: none;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: var(--accent);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
+            margin-top: 8px;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 28px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            color: var(--text-primary);
             font-family: var(--font);
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            text-decoration: none;
-            padding: 8px 20px;
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             cursor: pointer;
-            white-space: nowrap;
-        }
- 
-        .primary-btn {
-            background: var(--text-primary);
-            color: #0b0c10;
-            border: 1px solid var(--text-primary);
-        }
-        .primary-btn:hover { 
-            background: var(--accent);
-            color: var(--bg);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .primary-btn:active { 
-            background: #b8b8b8; 
-            border-color: #b8b8b8; 
-        }
- 
-        .secondary-btn {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .secondary-btn:hover { 
-            background: var(--surface-hover); 
-        }
-        .secondary-btn:active { 
-            background: rgba(255,255,255,0.12); 
-        }
- 
-        .danger-btn {
-            background: transparent;
-            color: #ff5555;
-            border: 1px solid rgba(255, 85, 85, 0.28);
-        }
-        .danger-btn:hover { 
-            background: rgba(255, 85, 85, 0.1); 
-        }
-        .danger-btn:active { 
-            background: rgba(255, 85, 85, 0.18); 
-        }
- 
-        /* ── Glass card ── */
-        .glass-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-            backdrop-filter: blur(8px);
-        }
-
-        #addUserForm{
-            width: 100%;
-            border-collapse: collapse;
-            padding: 15px;
             text-align: center;
-            justify-content: center;
-            margin: auto;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255,255,255,0.18);
         }
 
-        input{
-            border-radius: 5px;
-            padding: 5px;
-            font-size: 1.5rem;
-            gap: 10px;
-            margin: 20px;
-            font-family: var(--font);
-
-        }
-        /* ── Action group ── */
-        .action-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
- 
-        /* ── Empty state ── */
-        .empty-state {
+        /* ── Footer note ── */
+        .card-footer {
+            margin-top: 20px;
             text-align: center;
-            color: var(--text-secondary);
-            padding: 52px 20px !important;
-            font-size: 13px;
+            font-size: 10px;
             letter-spacing: 0.04em;
+            color: #333345;
         }
     </style>
 </head>
-<body class="admin-page">
+<body>
     <canvas id="neural-canvas"></canvas>
-    <div class="scroll-progress"></div>
 
     <nav class="top-nav">
-        <div class="logo">INNER<span>TURE</span></div>
+        <a href="/" class="logo">INNER<span>TURE</span></a>
+        <span class="nav-label">Secure Portal</span>
     </nav>
 
-    <main class="shell">
-        <div class="work-tablet admin-shell">
-            <header class="page-header">
-                <div>
-                    <span class="eyebrow">User Control</span>
-                    <h1>Add New User</h1>
-                </div>
-                <a class="primary-btn" href="index.html">← Back to Users</a>
-            </header>
-            <section class="admin-card form-card glass-card">
-                <form id="addUserForm">
-                    <input type="text" id="name" placeholder="Name" required><br>
-                    <input type="email" id="email" placeholder="Email" required><br>
-                    <input type="password" id="password" placeholder="Password" required><br>
-                    <button type="submit" class="primary-btn">Add User</button>
-                </form>
-            </section>
+    <div class="page-center">
+        <div class="auth-card">
+            <p class="eyebrow">Admin Panel</p>
+            <h1>Add account</h1>
+
+            <form id="addUserForm">
+    <div id="register-error" class="error-msg"></div>
+
+    <div class="field-group">
+        <label class="field-label" for="name">Full Name</label>
+        <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="name" placeholder="Jane Smith" required>
         </div>
-    </main>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label" for="email">Email Address</label>
+        <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+    </div>
+
+    <div class="field-group">
+        <label class="field-label" for="password">Password</label>
+        <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Add Account</button>
+</form>
 
     <script src="script.js"></script>
 </body>

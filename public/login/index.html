@@ -6,7 +6,7 @@
     <title>Login — Innerture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -31,7 +31,6 @@
             font-family: var(--font);
             font-size: 14px;
             line-height: 1.6;
-            overflow: hidden;
         }
 
         #neural-canvas {
@@ -74,12 +73,13 @@
         }
 
         .logo {
-            font-family: var(--font);
-            font-size: 1.1rem;
+            font-family: "Asimovian", sans-serif;
+            font-size: 1.5rem;
             font-weight: 700;
-            letter-spacing: 6px;
-            text-transform: uppercase;
+            letter-spacing: 4px;
             color: #fff;
+            text-transform: uppercase;
+            text-decoration: none;
         }
         .logo span { color: var(--accent); }
 
@@ -93,12 +93,12 @@
         .page {
             position: relative;
             z-index: 10;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 100px 24px 40px;
         }
-
         .card {
             width: min(420px, calc(100vw - 40px));
             background: rgba(14,15,20,0.9);
