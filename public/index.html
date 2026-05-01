@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innerture | Your future, prototyped.</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="neural-canvas"></canvas>
+
+    <div class="scroll-progress"></div>
+
+    <nav>
+        <div class="logo">INNERTURE</div>
+        <div id="user-greeting" class="user-greeting hidden">Welcome, <span id="user-name"></span>! <a href="#" id="logout-btn" style="font-size: 0.8rem; margin-left: 10px; color: var(--neon-cyan);">Log Out</a></div>
+        <ul class="nav-links">
+            <!-- Removed Discovery Engine, Simulations, and Reality Feed links -->
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Your future, <span class="gradient-text">prototyped.</span></h1>
+            <p>Don't guess your degree. Test drive your career. Enter our simulated environment to experience the daily reality of high-growth industries before you commit.</p>
+            <a href="#discovery" class="btn primary-btn">Start the Engine</a>
+        </div>
+    </header>
+
+    <section id="discovery" class="discovery-section">
+        <div class="glass-card intake-container">
+            <h2>The Discovery Engine</h2>
+            <p>Tell us what you're naturally good at, what you enjoy doing, or how you solve problems.</p>
+            
+            <div class="input-group">
+                <input type="text" id="strength-input" placeholder="e.g., 'I love solving puzzles' or 'I'm good at visual storytelling'" autocomplete="off">
+                <button id="analyze-btn" class="btn secondary-btn">Analyze</button>
+            </div>
+
+            <div id="result-area" class="result-card hidden">
+                <div class="role-header">
+                    <span id="role-category" class="category-badge">Category</span>
+                    <h3 id="role-title">Specific Role</h3>
+                </div>
+                <p id="role-reason">Why you? ...</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="match-progress"></div>
+                </div>
+                <p class="match-text">Match accuracy: <span id="match-percent">0</span>%</p>
+                <button id="start-sim-btn" class="btn sim-btn">Enter Simulation</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="simulations" class="content-section scroll-reveal">
+        <div class="glass-card">
+            <h2>Simulation Hub</h2>
+            <p>Your vibespace awaits. Awaiting Discovery Engine input to generate your custom scenario...</p>
+        </div>
+    </section>
+
+    <section id="reality-feed" class="content-section scroll-reveal">
+        <div class="glass-card">
+            <h2>The Reality Feed</h2>
+            <p>Truth Logs: Unfiltered reviews from real professionals. Burnout metrics, salary realities, and daily grit levels.</p>
+        </div>
+    </section>
+
+    <!-- Custom Modal -->
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <h2 id="modal-title">Access Restricted</h2>
+            <p id="modal-message">Please sign up or log in to access the simulation.</p>
+            <div class="modal-actions">
+                <button id="modal-primary-btn" class="btn primary-btn">Log In</button>
+                <button id="modal-secondary-btn" class="btn secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        if (!localStorage.getItem('loggedInUser')) {
+            window.location.href = '/login/';
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innerture | Your Actionable Roadmap</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="level-up-toast" class="toast hidden">
+        <div class="toast-content">
+            <span class="toast-icon">⬆️</span>
+            <div>
+                <h4>LEVEL UP!</h4>
+                <p id="toast-message">New skill acquired.</p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="roadmap-nav">
+        <div class="logo">INNERTURE</div>
+        <a href="#" class="back-btn" onclick="history.back(); return false;">← Back to Hub</a>
+    </nav>
+
+    <header class="roadmap-header">
+        <span class="category-badge" id="category-badge">Loading...</span>
+        <h1>Target Role: <span class="theme-text" id="role-title">Loading...</span></h1>
+        <p>Your verified, step-by-step path from ambition to employment.</p>
+        
+        <div class="global-progress">
+            <div class="progress-info">
+                <span>Career Readiness</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="global-progress-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="timeline-container" id="timeline-container">
+        <div class="timeline-line"></div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
