@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 2. THE CONTENT DATA (12 SPECIALIZED SIMULATIONS) ---
     const jobData = {
-        cyber: {
+        pen_tester: {
             accent:     "#ff4d6d",
             accentDim:  "rgba(255,77,109,0.10)",
             accentGlow: "rgba(255,77,109,0.25)",
@@ -292,6 +292,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.documentElement.style.setProperty('--accent',      current.accent);
         document.documentElement.style.setProperty('--accent-dim',  current.accentDim);
         document.documentElement.style.setProperty('--accent-glow', current.accentGlow);
+        document.querySelector('.nav-links li:nth-child(1) a').href = '../simulation/sim.html';
+        document.querySelector('.nav-links li:nth-child(2) a').href = '../reality/reality.html';
+        document.querySelector('.nav-links li:nth-child(1) a').classList.add('active');
 
         particleRGB = hexToRgb(current.accent);
 
@@ -360,6 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.addEventListener('resize', initCanvas);
+
 
     boot();
     

@@ -544,7 +544,12 @@ function boot() {
   animateCanvas();
   window.addEventListener('resize', initCanvas);
 
-  changePath('cyber_cons');
+  changePath(localStorage.getItem('userPath') || 'pen_tester');
+
+  // Nav links
+  document.querySelector('.nav-links li:nth-child(1) a').href = '../simulation/sim.html';
+  document.querySelector('.nav-links li:nth-child(2) a').href = '../reality/reality.html';
+  document.querySelector('.nav-links li:nth-child(2) a').classList.add('active');
 
   setTimeout(() => {
     const btn = document.querySelector('.tab-btn.active');
@@ -555,5 +560,4 @@ function boot() {
     }
   }, 60);
 }
-
 boot();
