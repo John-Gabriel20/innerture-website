@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login — Innerture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
- 
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
             --bg: #0b0c10;
-            --surface: rgba(255, 255, 255, 0.04);
-            --surface-hover: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.09);
+            --surface: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.09);
+            --border-focus: rgba(143,109,255,0.6);
             --text-primary: #f0f0f0;
-            --text-secondary: #777;
-            --accent: #ffffff;
-            --radius: 6px;
+            --text-secondary: #666;
+            --accent: #8f6dff;
+            --accent-glow: rgba(143,109,255,0.35);
+            --accent-dim: rgba(143,109,255,0.12);
+            --radius: 8px;
             --font: 'Chakra Petch', sans-serif;
         }
- 
+
         html, body {
             height: 100%;
             background: var(--bg);
@@ -33,202 +31,471 @@
             font-family: var(--font);
             font-size: 14px;
             line-height: 1.6;
-            overflow-x: hidden;
+            overflow: hidden;
         }
- 
-        /* ── Animated canvas ── */
+
         #neural-canvas {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
         }
- 
-        nav.top-nav {
-            position:relative; z-index:10;
-            width:100%;
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center;
-            padding:1.4rem 5%;
-            flex-shrink:0;
-            border-bottom:1px solid var(--border);
-            backdrop-filter:blur(8px);
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143,109,255,0.08) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite;
         }
-        .logo {
-            font-family: "Asimovian", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-            font-size:1.5rem; 
-            font-weight:800;
-            letter-spacing:4px; color:#fff; text-transform:uppercase;
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+            50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.12); }
         }
-        .logo span { 
-            color:var(--accent); 
-        }
- 
-        /* ── Shell ── */
-        main.shell {
-            position: relative;
-            z-index: 10;
-            max-width: 860px;
-            margin: 52px auto;
-            padding: 0 24px;
-        }
- 
-        /* ── Page header ── */
-        .page-header {
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 20;
+            padding: 1.4rem 5%;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(11,12,16,0.6);
         }
- 
-        .eyebrow {
-            display: block;
+
+        .logo {
+            font-family: var(--font);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav-tag {
             font-size: 10px;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin-bottom: 6px;
         }
- 
-        .page-header h1 {
-            font-family: var(--font);
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            color: var(--text-primary);
-        }
- 
-        .primary-btn {
-            display: inline-flex;
+
+        .page {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-family: var(--font);
-            font-size: 30px;
-            font-weight: 600;
-            background: transparent;
-            color: #8f6dff;
-            border: 1px solid #8f6dff;
-            text-decoration: none;
-            padding: 8px 20px;
-            margin: 20px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.3s ease-in-out;
         }
 
-        .primary-btn:hover { 
-            background: #8f6dff;
-            color: white;
-            box-shadow: 0 0 20px rgba(143,109,255,0.25);
-        }
-
-        .sec-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font);
-            font-size: 30px;
-            font-weight: 600;
-            background: transparent;
-            color: #8f6dff;
-            border: 1px solid #8f6dff;
-            text-decoration: none;
-            padding: 8px 20px;
-            margin: 20px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.3s ease-in-out;
-        }
-
-        .sec-btn:hover { 
-            background: #8f6dff;
-            color: white;
-            box-shadow: 0 0 20px rgba(143,109,255,0.25);
-        }
-        /* ── Glass card ── */
-        .glass-card {
-            background: transparent;
+        .card {
+            width: min(420px, calc(100vw - 40px));
+            background: rgba(14,15,20,0.9);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
             overflow: hidden;
-            backdrop-filter: blur(8px);
+            animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
-        #loginForm{
-            width: 100%;
-            border-collapse: collapse;
-            padding: 15px;
-            text-align: center;
-            justify-content: center;
-            margin: auto;
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: none; }
         }
 
-        h2{
-            font-size: 5rem;
+        .card-accent {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.7;
         }
 
-        input{
-            background: transparent;
-            border: 1px solid white;
-            width: 60%;
-            border-radius: 5px;
-            color: white;
-            padding: 15px;
-            font-size: 1.5rem;
-            gap: 10px;
-            margin: 10px;
-            font-family: var(--font);
-
+        .card-body {
+            padding: 40px 36px 36px;
         }
-        /* ── Action group ── */
-        .action-group {
+
+        .card-header {
+            margin-bottom: 32px;
+            animation: fadeUp 0.6s 0.1s both;
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
- 
-        /* ── Empty state ── */
-        .empty-state {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 52px 20px !important;
-            font-size: 13px;
+
+        .eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--accent);
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+
+        .card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
             letter-spacing: 0.04em;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .card-header p {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            letter-spacing: 0.04em;
+        }
+
+        .field {
+            margin-bottom: 16px;
+            animation: fadeUp 0.6s both;
+        }
+        .field:nth-child(1) { animation-delay: 0.15s; }
+        .field:nth-child(2) { animation-delay: 0.22s; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-family: var(--font);
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            width: 15px;
+            height: 15px;
+            opacity: 0.3;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            padding: 13px 14px 13px 42px;
+            font-size: 14px;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+
+        input::placeholder { color: rgba(255,255,255,0.18); }
+
+        input:focus {
+            border-color: var(--border-focus);
+            background: rgba(143,109,255,0.05);
+            box-shadow: 0 0 0 3px rgba(143,109,255,0.08);
+        }
+
+        input:focus ~ .input-icon { opacity: 0.7; }
+
+        .forgot {
+            display: block;
+            text-align: right;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-top: -4px;
+            margin-bottom: 20px;
+            letter-spacing: 0.04em;
+            transition: color 0.2s;
+            font-family: var(--font);
+            animation: fadeUp 0.6s 0.28s both;
+        }
+        .forgot:hover { color: var(--accent); }
+
+        #login-error {
+            display: none;
+            background: rgba(255,51,51,0.08);
+            border: 1px solid rgba(255,51,51,0.25);
+            border-radius: var(--radius);
+            color: #ff6b6b;
+            font-size: 12px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            letter-spacing: 0.04em;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 13px 20px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+            animation: fadeUp 0.6s 0.32s both;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
+        }
+
+        .btn-primary:hover {
+            background: #a285ff;
+            box-shadow: 0 8px 32px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active { transform: translateY(0); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            animation: fadeUp 0.6s 0.36s both;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .divider span {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost {
+            width: 100%;
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            animation: fadeUp 0.6s 0.4s both;
+        }
+        .btn-ghost:hover {
+            border-color: var(--border-focus);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .card-footer {
+            padding: 16px 36px 20px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: 0.08em;
+            font-family: var(--font);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: none; }
         }
     </style>
 </head>
-<body class="admin-page">
+<body>
     <canvas id="neural-canvas"></canvas>
-    <div class="scroll-progress"></div>
+    <div class="bg-glow"></div>
 
-    <nav class="top-nav">
+    <nav>
         <div class="logo">INNER<span>TURE</span></div>
+        <span class="nav-tag">Secure Portal</span>
     </nav>
 
-    <main class="shell">
-        <div class="work-tablet admin-shell">
-            <section class="admin-card form-card glass-card">
-                <form id="loginForm">
-                    <h2>Login</h2>
-                    
-                    <div id="login-error" style="color: #ff3333; margin-bottom: 15px; display: none; font-weight: bold;"></div>
-                    
-                    <input type="email" id="email" placeholder="Email" required><br>
-                    <input type="password" id="password" placeholder="Password" required><br>
-                    <button type="submit" class="primary-btn">Login</button>
-                    <a href="/signup/register" id="goToRegister" class="sec-btn" style="text-decoration: none;">Register</a>
-                </form>
-            </section>
-        </div>
-    </main>
+    <div class="page">
+        <div class="card">
+            <div class="card-accent"></div>
+            <div class="card-body">
 
-    <script src="/login/script.js"></script>
+                <div class="card-header">
+                    <div class="eyebrow">Authentication</div>
+                    <h1>Welcome back</h1>
+                    <p>Sign in to continue to your account</p>
+                </div>
+
+                <div id="login-error"></div>
+
+                <form id="loginForm" autocomplete="off">
+                    <div class="field">
+                        <label for="email">Email address</label>
+                        <div class="input-wrap">
+                            <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="4" width="20" height="16" rx="3"/>
+                                <path d="M2 7l10 7 10-7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <div class="input-wrap">
+                            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                <path d="M7 11V7a5 5 0 0110 0v4"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <a href="#" class="forgot">Forgot password?</a>
+
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+
+                <div class="divider"><span>or</span></div>
+
+                <a href="/signup/register" id="goToRegister" class="btn-ghost">Create an account</a>
+            </div>
+
+            <div class="card-footer">Protected by end-to-end encryption</div>
+        </div>
+    </div>
+
+    <script>
+    // ── Background canvas ──
+    (function() {
+        const canvas = document.getElementById('neural-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let W = canvas.width  = window.innerWidth;
+        let H = canvas.height = window.innerHeight;
+
+        const particles = Array.from({ length: 80 }, () => {
+            const x = Math.random() * W;
+            const y = Math.random() * H;
+            return { x, y, baseX: x, baseY: y, size: Math.random() * 1.4 + 0.6, density: Math.random() * 22 + 2 };
+        });
+
+        const mouse = { x: null, y: null, radius: 160 };
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('resize', () => {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        });
+
+        (function tick() {
+            ctx.clearRect(0, 0, W, H);
+            particles.forEach((p, i) => {
+                if (mouse.x !== null) {
+                    const dx = mouse.x - p.x, dy = mouse.y - p.y;
+                    const d = Math.hypot(dx, dy);
+                    if (d < mouse.radius) {
+                        const f = (mouse.radius - d) / mouse.radius;
+                        p.x -= (dx / d) * f * p.density;
+                        p.y -= (dy / d) * f * p.density;
+                    }
+                }
+                p.x += (p.baseX - p.x) / 14;
+                p.y += (p.baseY - p.y) / 14;
+                ctx.fillStyle = 'rgba(255,255,255,0.35)';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const q = particles[j];
+                    const d2 = Math.hypot(p.x - q.x, p.y - q.y);
+                    if (d2 < 115) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255,255,255,${(1 - d2 / 115) * 0.18})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(tick);
+        })();
+    })();
+
+    // ── Login form ──
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email    = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        const btn      = e.target.querySelector('button[type="submit"]');
+        const errorDiv = document.getElementById('login-error');
+        const orig     = btn.textContent;
+
+        errorDiv.style.display = 'none';
+        btn.textContent = 'Authenticating…';
+        btn.disabled = true;
+
+        try {
+            const res  = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                errorDiv.textContent = data.error || 'Invalid email or password';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+            window.location.href = '/';
+        } catch (err) {
+            errorDiv.textContent = 'Could not connect. ' + err.message;
+            errorDiv.style.display = 'block';
+        } finally {
+            btn.textContent = orig;
+            btn.disabled = false;
+        }
+    });
+    </script>
 </body>
 </html>
