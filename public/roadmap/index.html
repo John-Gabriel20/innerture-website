@@ -9,13 +9,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innerture | Your Actionable Roadmap</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Forced Cache Buster to v=8 -->
+    <link rel="stylesheet" href="/roadmap/style.css?v=8">
 </head>
 <body>
+    <div class="print-header">INNERTURE - PERSONALIZED ROADMAP</div>
+
+    <canvas id="neural-canvas"></canvas>
 
     <div id="level-up-toast" class="toast hidden">
         <div class="toast-content">
-            <span class="toast-icon">⬆️</span>
+            <span class="toast-icon">◈</span>
             <div>
                 <h4>LEVEL UP!</h4>
                 <p id="toast-message">New skill acquired.</p>
@@ -24,30 +32,86 @@
     </div>
 
     <nav class="roadmap-nav">
-        <div class="logo">INNERTURE</div>
-        <a href="#" class="back-btn" onclick="history.back(); return false;">← Back to Hub</a>
+        <div class="logo">INNER<span>TURE</span></div>
+        <ul class="nav-links">
+            <li><a href="/#discovery">The Engine</a></li>
+        <!-- Ensure IDs match the script below -->
+            <li><a href="/simulation/sim.html" id="roadmap-sim-nav">Simulations</a></li>
+            <li><a href="/reality/reality.html" id="roadmap-reality-nav">Reality Feed</a></li>
+            <li><a href="/roadmap/index.html">Roadmap</a></li>
+        </ul>
+        <a href="/" class="back-btn">← Back to Hub</a>
     </nav>
 
-    <header class="roadmap-header">
-        <span class="category-badge" id="category-badge">Loading...</span>
-        <h1>Target Role: <span class="theme-text" id="role-title">Loading...</span></h1>
-        <p>Your verified, step-by-step path from ambition to employment.</p>
-        
-        <div class="global-progress">
-            <div class="progress-info">
-                <span>Career Readiness</span>
-                <span id="progress-text">0%</span>
+
+    <header class="roadmap-header" id="roadmap-header">
+        <div class="glass-card tilt-card header-box">
+            <div id="localization-banner" class="localization-banner hidden">
+                <span class="loc-icon">📍</span>
+                <span id="loc-text">Analyzing regional job market...</span>
             </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="global-progress-fill"></div>
+
+            <span class="category-badge" id="category-badge">Loading...</span>
+            <h1>Target Role: <span class="gradient-text" id="role-title">Loading...</span></h1>
+            <p class="subtitle">Your verified, step-by-step path from ambition to employment.</p>
+            
+            <div class="global-progress">
+                <div class="progress-info">
+                    <span id="progress-label">Career Readiness</span>
+                    <span id="progress-text" class="neon-highlight">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="global-progress-fill"></div>
+                </div>
             </div>
+
+            <button id="download-pdf-btn" class="btn primary-btn pdf-btn hidden">📥 Download PDF Guide</button>
         </div>
     </header>
 
     <main class="timeline-container" id="timeline-container">
         <div class="timeline-line"></div>
+        <!-- Dynamic Steps Injected Here -->
     </main>
 
-    <script src="script.js"></script>
+    <!-- Premium Access Required Modal -->
+    <div id="premium-required-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <h2>Premium Access Required</h2>
+            <p style="margin-top: 1rem; margin-bottom: 2rem; color: var(--text-main);">This feature is only available to premium members. Upgrade now to unlock Simulations and Reality Feed!</p>
+            <div class="modal-actions">
+                <button id="upgrade-btn" class="btn primary-btn">Upgrade to Premium</button>
+                <button id="upgrade-cancel-btn" class="btn secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paywall Modal -->
+    <div id="paywall-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <h2 id="paywall-title">Unlock Premium Access</h2>
+            <div class="paywall-content">
+                <p class="paywall-price"><span class="price-value">$5.99</span><span class="price-currency"> USD</span></p>
+                <p class="paywall-description">Get instant access to:</p>
+                <ul class="paywall-features">
+                    <li>Premium Roadmap with interactive checklists</li>
+                    <li>Real Job Simulations with realistic scenarios</li>
+                    <li>Reality Feed with insights from professionals</li>
+                    <li>Salary increase estimates for every skill</li>
+                    <li>Downloadable PDF guides</li>
+                    <li>Localized content for your region</li>
+                </ul>
+            </div>
+            <div class="modal-actions">
+                <button id="paywall-buy-btn" class="btn primary-btn">Complete Purchase</button>
+                <button id="paywall-cancel-btn" class="btn secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Forced Cache Buster to v=8 -->
+    <script src="/roadmap/script.js?v=8"></script>
 </body>
 </html>

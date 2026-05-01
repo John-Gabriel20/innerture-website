@@ -1,9 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 
+// FIXED 1: The NEW SDK requires the object syntax if you use a custom key name
 const ai = new GoogleGenAI({ apiKey: process.env.MY_SECRET_API_KEY });
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+
+    // Safety check so Vercel doesn't fail silently
+    if (!process.env.MY_SECRET_API_KEY) {
+        console.error("API Key is missing in Vercel Environment Variables");
+        return res.status(500).json({ error: "Missing API Key" });
+    }
 
     const userText = req.body.userInput || "";
 
@@ -25,27 +32,23 @@ export default async function handler(req, res) {
             CRITICAL: Return ONLY valid JSON. Do not use markdown formatting, do not use backticks, and do not include any other words.
         `;
 
+        // FIXED 2: The NEW SDK uses ai.models.generateContent
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
-            config: {
-                temperature: 0
-            }
         });
 
-        let rawText = response.text;
-        rawText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        // FIXED 3: In the NEW SDK, .text is a property, not a function ()
+        let text = response.text;
+        
+        // Clean up accidental AI markdown
+        text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-        try {
-            const cleanData = JSON.parse(rawText);
-            res.status(200).json(cleanData);
-        } catch (parseError) {
-            console.error("Failed to parse JSON, falling back.", parseError);
-            res.status(200).json({ category: "unknown", role: "Unknown Input", accuracy: 0, reason: "Error parsing the neural response." });
-        }
+        const cleanData = JSON.parse(text);
+        res.status(200).json(cleanData);
 
     } catch (error) {
         console.error("Gemini API Error:", error);
-        res.status(500).json({ error: "NEURAL_LINK_FAILURE" });
+        res.status(500).json({ error: "NEURAL_LINK_FAILURE", message: error.message });
     }
 }

@@ -9,13 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const glassCards = document.querySelectorAll(".glass-card");
     const heroBtn = document.querySelector('.primary-btn');
     const progressBar = document.querySelector('.scroll-progress');
-    const startSimBtn = document.getElementById("start-sim-btn");
+    const seeRoadmapBtn = document.getElementById("see-roadmap-btn"); 
     const signInBtn = document.getElementById('signin-btn');
     const premiumBuyBtn = document.getElementById('premium-buy-btn');
     const paywallModal = document.getElementById('paywall-modal');
     const paywallBuyBtn = document.getElementById('paywall-buy-btn');
     const paywallCancelBtn = document.getElementById('paywall-cancel-btn');
     const paywallContent = document.querySelector('.modal-content');
+    const theEngineBtn = document.getElementById('the-engine-btn');
+    const engineModal = document.getElementById('engine-modal');
+    const engineContent = document.querySelector('.engine-modal-content');
+    const engineCloseBtn = document.getElementById('engine-close-btn');
 
     function showPaywall() {
         if (!paywallModal) return;
@@ -51,6 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (paywallBuyBtn) {
         paywallBuyBtn.addEventListener('click', () => {
+            localStorage.setItem('isPremium', 'true'); 
+            updatePremiumContent();
             showModal('Purchase Successful', 'Your premium access is now active! Enjoy the full Innerture experience.', 'Continue', hidePaywall);
         });
     }
@@ -59,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         paywallCancelBtn.addEventListener('click', hidePaywall);
     }
 
-    // Close paywall when clicking outside (on overlay)
     if (paywallModal) {
         paywallModal.addEventListener('click', (e) => {
             if (e.target === paywallModal) hidePaywall();
@@ -116,8 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const slugify = (text) => {
         return text.toLowerCase()
-            .replace(/[^a-z0-9]+/g, '_')
-            .replace(/(^_|_$)+/g, '');
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
     };
 
     function renderRoadmap(plan) {
@@ -262,6 +267,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if(data.role) {
             currentRoleSlug = slugify(data.role);
+            localStorage.setItem('courseData', JSON.stringify({
+                role: data.role,
+                slug: currentRoleSlug,
+                category: data.category,
+                accuracy: data.accuracy,
+                reason: data.reason
+            }));
         }
         
         document.documentElement.style.setProperty('--active-accent', pathData.color);
@@ -273,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.category === "unknown") {
             document.getElementById('match-progress').style.width = '0%';
             matchPercent.innerText = "0";
-            startSimBtn.style.opacity = 0;
+            if(seeRoadmapBtn) seeRoadmapBtn.style.opacity = 0;
             return;
         }
 
@@ -284,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .add({
                 targets: counterObj, val: data.accuracy, round: 1, duration: 1500, update: () => { matchPercent.innerText = counterObj.val; }
             }, '-=1500')
-            .add({ targets: '#start-sim-btn', scale: [0.8, 1], opacity: [0, 1], easing: 'spring(1, 80, 10, 0)' }, '-=800');
+            .add({ targets: '#see-roadmap-btn', scale: [0.8, 1], opacity: [0, 1], easing: 'spring(1, 80, 10, 0)' }, '-=800');
     }
 
     function cipherEffect(element, finalString) {
@@ -317,7 +329,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Optimized anti-jitter 3D mouse tracking
     document.addEventListener("mousemove", (e) => {
         let xAxis = (window.innerWidth / 2 - e.pageX) / 120;
         let yAxis = (window.innerHeight / 2 - e.pageY) / 120;
@@ -362,8 +373,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: 0.2 });
     revealCards.forEach(card => revealObserver.observe(card));
 
-    // Handle User Greeting
+    // --- UPDATED SIGN-IN LOGIC & NAVIGATION INTERCEPTION ---
     const loggedInUserStr = localStorage.getItem('loggedInUser');
+    const navRoadmapItem = document.getElementById('nav-roadmap-item');
+    
     if (loggedInUserStr) {
         try {
             const user = JSON.parse(loggedInUserStr);
@@ -371,10 +384,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const userNameSpan = document.getElementById('user-name');
             const logoutBtn = document.getElementById('logout-btn');
 
-            if (userGreeting && userNameSpan && user.name) {
-                userNameSpan.innerText = user.name;
+            if (userGreeting && userNameSpan) {
+                userNameSpan.innerText = user.name || "Explorer";
                 userGreeting.classList.remove('hidden');
+                
                 if (signInBtn) signInBtn.classList.add('hidden');
+                if (navRoadmapItem) navRoadmapItem.classList.remove('hidden');
 
                 if (logoutBtn) {
                     logoutBtn.classList.remove('hidden');
@@ -387,6 +402,44 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (e) {
             console.error('Error parsing loggedInUser:', e);
+        }
+    }
+
+    // INTERCEPT NAV ROADMAP CLICK: Ensure they only go if they have a role saved
+    if (navRoadmapItem) {
+        const navRoadmapLinkAnchor = navRoadmapItem.querySelector('a');
+        if (navRoadmapLinkAnchor) {
+            navRoadmapLinkAnchor.addEventListener('click', (e) => {
+                e.preventDefault(); // Stop normal redirection
+                
+                let storedPath = localStorage.getItem('userPath');
+                
+                // Fallback: If they haven't explicitly set userPath but DID take the quiz
+                if (!storedPath || storedPath === 'unknown') {
+                    const courseDataStr = localStorage.getItem('courseData');
+                    if (courseDataStr) {
+                        try {
+                            const courseData = JSON.parse(courseDataStr);
+                            if (courseData.slug) {
+                                storedPath = courseData.slug;
+                                localStorage.setItem('userPath', storedPath);
+                            }
+                        } catch(err) {}
+                    }
+                }
+
+                // If they have a valid job assigned, let them through!
+                if (storedPath && storedPath !== 'unknown') {
+                    window.location.href = '/roadmap/index.html';
+                } else {
+                    // Alert them and drag them to the quiz
+                    alert("You haven't generated your personalized roadmap yet! Please run the Discovery Engine first.");
+                    const discoverySection = document.getElementById('discovery');
+                    if (discoverySection) {
+                        discoverySection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
         }
     }
 
@@ -452,31 +505,76 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    if (startSimBtn) {
-        startSimBtn.addEventListener('click', () => {
+    if (seeRoadmapBtn) {
+        seeRoadmapBtn.addEventListener('click', () => {
             const user = localStorage.getItem('loggedInUser');
             if (!user) {
                 showModal(
                     "Access Restricted",
-                    "Please sign up or log in to access the simulation.",
+                    "Please sign up or log in to access your personalized roadmap.",
                     "Log In",
                     () => { window.location.href = '/login/'; },
                     "Cancel"
                 );
             } else {
-                showModal(
-                    "Simulation Ready",
-                    "Welcome back! Your vibespace is initialized.",
-                    "Enter",
-                    () => {
-                        if (currentRoleSlug) {
-                            localStorage.setItem('userPath', currentRoleSlug);
-                            window.location.href = '/simulation/sim.html';
-                        }
-                    },
-                    "Cancel"
-                );
+                if (currentRoleSlug) {
+                    localStorage.setItem('userPath', currentRoleSlug);
+                    window.location.href = '/roadmap/index.html'; 
+                }
             }
         });
     }
+
+    const showEngineModal = () => {
+        if (!engineModal) return;
+        engineModal.classList.add('active');
+        anime({
+            targets: engineContent,
+            scale: [0.8, 1],
+            translateY: [20, 0],
+            opacity: [0, 1],
+            duration: 600,
+            easing: 'easeOutElastic(1, .6)'
+        });
+    };
+
+    const hideEngineModal = () => {
+        if (!engineModal) return;
+        anime({
+            targets: engineContent,
+            scale: [1, 0.8],
+            translateY: [0, 20],
+            opacity: [1, 0],
+            duration: 300,
+            easing: 'easeInQuad',
+            complete: () => {
+                engineModal.classList.remove('active');
+            }
+        });
+    };
+
+    if (theEngineBtn) {
+        theEngineBtn.addEventListener('click', showEngineModal);
+    }
+
+    if (engineCloseBtn) {
+        engineCloseBtn.addEventListener('click', hideEngineModal);
+    }
+
+    const premiumSections = document.querySelectorAll('.premium-content');
+    
+    function updatePremiumContent() {
+        const isPremium = localStorage.getItem('isPremium') === 'true';
+        
+        premiumSections.forEach(section => {
+            if (isPremium) {
+                section.classList.remove('hidden');
+            } else {
+                section.classList.add('hidden');
+            }
+        });
+    }
+
+    updatePremiumContent();
+    window.addEventListener('storage', updatePremiumContent);
 });

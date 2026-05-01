@@ -1,17 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // --- 1. DOM ELEMENTS ---
-    const canvas = document.getElementById("neural-canvas");
-    const ctx = canvas.getContext("2d");
-    const tablet = document.querySelector(".work-tablet");
-    const slider = document.querySelector('.tab-slider');
-    const progressBar = document.querySelector('.scroll-progress');
-    const tabSections = document.querySelectorAll('.tab-section');
-    const submitBtn = document.querySelector('.neon-btn');
-    const toast = document.getElementById('toast');
-
-    // --- 2. THE CONTENT DATA (12 SPECIALIZED SIMULATIONS) ---
+    // --- 1. THE CONTENT DATA (12 SPECIALIZED SIMULATIONS) ---
+    // Keys are now perfectly mapped to the Discovery Engine's output slugs
     const jobData = {
-        pen_tester: {
+        "penetration-tester": {
             accent:     "#ff4d6d",
             accentDim:  "rgba(255,77,109,0.10)",
             accentGlow: "rgba(255,77,109,0.25)",
@@ -25,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Describe a specific 'prop' or a social situation you would use to get a guard to hold the door open for you.</strong> Focus on human psychology and social norms.</p>`,
             criteria: ["Low suspicion profile", "Exploits social norms (politeness/authority)", "Zero physical damage", "Logically sound"]
         },
-        graphic_des: {
+        "graphic-designer": {
             accent:     "#ff5a99",
             accentDim:'rgba(255,90,153,0.10)', 
             accentGlow:'rgba(255,90,153,0.25)',
@@ -39,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest a specific color palette (3-4 colors) and a style of typography (e.g., Bold Serif, Rounded Sans) that fixes the 'boring' look and creates a warm, premium feel.</strong></p>`,
             criteria: ["Solves readability issues", "Shifts 'clinical' feel to 'organic'", "High-fidelity visual interest", "Professional aesthetic"]
         },
-        full_stack: {
+        "full-stack-developer": {
             accent:'#42d7ff',
             accentDim:'rgba(66,215,255,0.10)', 
             accentGlow:'rgba(66,215,255,0.25)',
@@ -53,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one clever way to handle traffic spikes or prevent refresh-spamming so the database stays alive.</strong> Focus on immediate implementation.</p>`,
             criteria: ["Reduces immediate database stress", "Zero hardware cost", "UX remains functional", "Implementable in under 60 minutes"]
         },
-        ux_ui: {
+        "ux-ui-designer": {
             accent:'#ffb347',
             accentDim:'rgba(255,179,71,0.10)', 
             accentGlow:'rgba(255,179,71,0.25)',
@@ -67,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one feature or visual update that beats the competitor's 'One-Click' ease while staying true to our brand.</strong></p>`,
             criteria: ["Matches competitor speed", "Stays brand-consistent", "Unique visual identity", "High-fidelity UX"]
         },
-        data_sci: {
+        "data-scientist": {
             accent:'#7b55ff',
             accentDim:'rgba(123,85,255,0.10)', 
             accentGlow:'rgba(123,85,255,0.25)',
@@ -81,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one 'real-world' factor (like weather or local events) that would make the sales prediction 100% more accurate.</strong></p>`,
             criteria: ["Logical link to sales", "Simple to understand", "Improves prediction accuracy", "Actionable data point"]
         },
-        video_ed: {
+        "video-editor": {
             accent:'#00d3ff',
             accentDim:'rgba(0,211,255,0.10)', 
             accentGlow:'rgba(0,211,255,0.25)',
@@ -95,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>How do you re-arrange or 'cheat' the footage to create an instant, high-energy opening that stops people from skipping?</strong></p>`,
             criteria: ["Stops immediate skips", "Uses existing assets", "Creates instant curiosity", "Improves pacing"]
         },
-        sec_analyst: {
+        "security-analyst": {
             accent:'#fae100',
             accentDim:'rgba(250,225,0,0.10)', 
             accentGlow:'rgba(250,225,0,0.25)',
@@ -109,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one 'logic trap' (like a fake hidden link or file) that a human never sees, but a hacker’s bot will definitely hit.</strong></p>`,
             criteria: ["Surgically isolates the threat", "Zero impact on real users", "Immediate results", "Clever 'honey-pot' logic"]
         },
-        cyber_cons: {
+        "cybersecurity-consultant": {
             accent:'#32ff7e',
             accentDim:'rgba(50,255,126,0.10)', 
             accentGlow:'rgba(50,255,126,0.25)',
@@ -123,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one clever way to 'alert' or 'prime' employees instantly during a call so they don't fall for this.</strong></p>`,
             criteria: ["Immediate implementation", "Zero technical jargon", "Addresses human psychology", "Low-effort/High-impact"]
         },
-        forensics: {
+        "digital-forensics": {
             accent:'#8f6dff',
             accentDim:'rgba(143,109,255,0.10)', 
             accentGlow:'rgba(143,109,255,0.25)',
@@ -137,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one 'non-obvious' place (physical or digital) to find proof of activity after a wipe.</strong></p>`,
             criteria: ["Bypasses standard wipe logic", "Logical evidence", "No specialized forensic tools needed", "Quick investigation time"]
         },
-        creative_prod: {
+        "creative-producer": {
             accent:'#ff7f2a',
             accentDim:'rgba(255,127,42,0.10)', 
             accentGlow:'rgba(255,127,42,0.25)',
@@ -151,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest a list of assets or 'B-Roll' you can film right now that doesn't require the main star.</strong></p>`,
             criteria: ["Saves the daily budget", "Produces usable assets", "Uses crew effectively", "Creative problem solving"]
         },
-        photog_video: {
+        "photographer-videographer": {
             accent:'#7cff66',
             accentDim:'rgba(124,255,102,0.10)', 
             accentGlow:'rgba(124,255,102,0.25)',
@@ -165,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                    <p style="color: var(--muted);"><strong>Suggest one way to use your camera or the environment to make a grey day look high-end and 'warm.'</strong></p>`,
             criteria: ["Creative use of light", "Mood-shifting strategy", "Luxury aesthetic", "Works within constraints"]
         },
-        content_cre: {
+        "content-creator": {
             accent:'#ff6bf3',
             accentDim:'rgba(255,107,243,0.10)', 
             accentGlow:'rgba(255,107,243,0.25)',
@@ -181,82 +172,90 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
-    const path = localStorage.getItem('userPath') || 'cyber';
-    const current = jobData[path] || jobData['cyber'];
+    // Load correct job based on Roadmap data, fallback to penetration-tester
+    let path = localStorage.getItem('userPath');
+    if (!path || !jobData[path]) {
+        path = 'penetration-tester';
+    }
+    const current = jobData[path];
 
-    // --- 3. NEURAL MATRIX ENGINE (UNTOUCHED) ---
-    let width, height, particles, particleRGB = '255,255,255';
-    let mouse = { x: null, y: null, radius: 160 };
+    // --- 2. NEURAL MATRIX BACKGROUND ---
+    const canvas = document.getElementById("neural-canvas");
+    const ctx = canvas ? canvas.getContext("2d") : null;
+    let width, height, particles;
+    let mouse = { x: null, y: null, radius: 150 };
 
     window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
 
-    function hexToRgb(hex) {
-        return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;
-    }
-
     function initCanvas() {
+        if (!canvas || !ctx) return;
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        particles = Array.from({ length: 80 }, () => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            baseX: Math.random() * width,
-            baseY: Math.random() * height,
-            size: Math.random() * 1.6 + 0.8,
-            density: Math.random() * 24 + 2
-        }));
+        particles = Array.from({ length: 80 }, () => new Particle());
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width; 
+            this.y = Math.random() * height;
+            this.size = Math.random() * 2 + 1;
+            this.baseX = this.x; 
+            this.baseY = this.y;
+            this.density = (Math.random() * 30) + 1;
+        }
+        draw() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        update() {
+            this.y -= 0.5;
+            if (this.y < 0) this.y = height;
+            let dx = mouse.x - this.x, dy = mouse.y - this.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+                let force = (mouse.radius - dist) / mouse.radius;
+                this.x -= (dx / dist) * force * this.density;
+                this.y -= (dy / dist) * force * this.density;
+            } else {
+                this.x -= (this.x - this.baseX) / 10;
+                this.y -= (this.y - this.baseY) / 10;
+            }
+        }
     }
 
     function animateCanvas() {
+        if (!ctx) return;
         ctx.clearRect(0, 0, width, height);
         particles.forEach((p, i) => {
-            if (mouse.x !== null) {
-                let dx = mouse.x - p.x, dy = mouse.y - p.y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < mouse.radius) {
-                    let f = (mouse.radius - dist) / mouse.radius;
-                    p.x -= (dx / dist) * f * p.density;
-                    p.y -= (dy / dist) * f * p.density;
-                } else {
-                    p.x += (p.baseX - p.x) / 14;
-                    p.y += (p.baseY - p.y) / 14;
-                }
-            }
-            ctx.fillStyle = `rgba(${particleRGB},0.42)`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-            for (let j = i + 1; j < particles.length; j++) {
-                let dx = p.x - particles[j].x, dy = p.y - particles[j].y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 115) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(${particleRGB},${(1 - dist/115)*0.24})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
+            p.update(); 
+            p.draw();
+            for (let j = i; j < particles.length; j++) {
+                let dx = p.x - particles[j].x, dy = p.y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100) {
+                    ctx.beginPath(); 
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist/100})`;
+                    ctx.lineWidth = 0.5; 
+                    ctx.moveTo(p.x, p.y); 
+                    ctx.lineTo(particles[j].x, particles[j].y); 
                     ctx.stroke();
                 }
             }
         });
         requestAnimationFrame(animateCanvas);
     }
-
-    // --- 4. TEXT & UI UTILITIES ---
-    function cipherEffect(element, finalString) {
-        if (!element) return;
-        let iteration = 0;
-        clearInterval(element.dataset.intervalId);
-        element.dataset.intervalId = setInterval(() => {
-            element.innerText = finalString.split("").map((letter, index) => {
-                if(index < iteration) return finalString[index];
-                return letters[Math.floor(Math.random() * letters.length)];
-            }).join("");
-            if(iteration >= finalString.length) clearInterval(element.dataset.intervalId);
-            iteration += 1 / 3;
-        }, 30);
+    
+    if (canvas && ctx) {
+        initCanvas(); animateCanvas();
+        window.addEventListener('resize', initCanvas);
     }
+
+    // --- 3. UI & TAB LOGIC ---
+    const tablet = document.querySelector(".work-tablet");
+    const slider = document.querySelector('.tab-slider');
+    const progressBar = document.querySelector('.scroll-progress');
+    const tabSections = document.querySelectorAll('.tab-section');
 
     function updateScrollProgress() {
         if (!progressBar) return;
@@ -274,56 +273,92 @@ document.addEventListener("DOMContentLoaded", () => {
         progressBar.style.width = `${percent}%`;
     }
 
-    // --- 5. TAB SWITCHING ---
     window.switchTab = (e, tabId) => {
         document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        
         document.getElementById(tabId).classList.add('active');
         e.currentTarget.classList.add('active');
         
-        slider.style.left = e.currentTarget.offsetLeft + 'px';
-        slider.style.width = e.currentTarget.offsetWidth + 'px';
+        if (slider) {
+            slider.style.left = e.currentTarget.offsetLeft + 'px';
+            slider.style.width = e.currentTarget.offsetWidth + 'px';
+        }
 
         updateScrollProgress();
     };
 
-    // --- 6. BOOT ---
-    function boot() {
-        document.documentElement.style.setProperty('--accent',      current.accent);
-        document.documentElement.style.setProperty('--accent-dim',  current.accentDim);
-        document.documentElement.style.setProperty('--accent-glow', current.accentGlow);
-        document.querySelector('.nav-links li:nth-child(1) a').href = '../simulation/sim.html';
-        document.querySelector('.nav-links li:nth-child(2) a').href = '../reality/reality.html';
-        document.querySelector('.nav-links li:nth-child(1) a').classList.add('active');
+    // Hacker text typing effect
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+    function cipherEffect(element, finalString) {
+        if (!element || !finalString) return;
+        let iteration = 0;
+        clearInterval(element.dataset.intervalId);
+        element.dataset.intervalId = setInterval(() => {
+            element.innerText = finalString.split("").map((letter, index) => {
+                if(index < iteration) return finalString[index];
+                return letters[Math.floor(Math.random() * letters.length)];
+            }).join("");
+            if(iteration >= finalString.length) clearInterval(element.dataset.intervalId);
+            iteration += 1 / 3;
+        }, 30);
+    }
 
-        particleRGB = hexToRgb(current.accent);
+    // Submission Logic
+    window.submitProposal = () => {
+        const proposal = document.getElementById('proposal').value;
+        if(!proposal.trim()) {
+            alert('Please enter a response before transmitting.');
+            return;
+        }
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                document.getElementById('proposal').value = '';
+            }, 3000);
+        }
+    };
+
+    // --- 4. BOOT AND INITIALIZE DATA ---
+    function boot() {
+        document.documentElement.style.setProperty('--accent', current.accent);
+        document.documentElement.style.setProperty('--accent-dim', current.accentDim);
+        document.documentElement.style.setProperty('--accent-glow', current.accentGlow);
 
         const titleEl = document.getElementById('job-title-display');
-        cipherEffect(titleEl, current.title);
+        if (titleEl) cipherEffect(titleEl, current.title);
         
-        document.getElementById('protocol-title').innerText = current.protocol;
-        document.getElementById('brief-content').innerHTML = current.brief;
-        document.getElementById('task-content').innerHTML = current.task;
+        const protocolEl = document.getElementById('protocol-title');
+        if (protocolEl) protocolEl.innerText = current.protocol;
+        
+        const briefEl = document.getElementById('brief-content');
+        if (briefEl) briefEl.innerHTML = current.brief;
+        
+        const taskEl = document.getElementById('task-content');
+        if (taskEl) taskEl.innerHTML = current.task;
         
         const list = document.getElementById('criteria-list');
-        list.innerHTML = "";
-        current.criteria.forEach(item => {
-            const li = document.createElement('li');
-            li.innerText = item;
-            list.appendChild(li);
-        });
+        if (list) {
+            list.innerHTML = "";
+            current.criteria.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                list.appendChild(li);
+            });
+        }
 
-        anime({
-            targets: tablet,
-            scale: [0.8, 1],
-            opacity: [0, 1],
-            rotateX: [15, 0],
-            duration: 1500,
-            easing: 'easeOutElastic(1, .6)'
-        });
-
-        initCanvas();
-        animateCanvas();
+        if (tablet && typeof anime !== 'undefined') {
+            anime({
+                targets: tablet,
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                rotateX: [15, 0],
+                duration: 1500,
+                easing: 'easeOutElastic(1, .6)'
+            });
+        }
 
         tabSections.forEach(section => section.addEventListener('scroll', updateScrollProgress));
         updateScrollProgress();
@@ -334,37 +369,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 slider.style.left  = activeBtn.offsetLeft + 'px';
                 slider.style.width = activeBtn.offsetWidth + 'px';
             }
-        }, 60);
+        }, 100);
     }
 
-    // --- 7. 3D TILT & SUBMIT ---
-    document.addEventListener("mousemove", (e) => {
-        let xAxis = (window.innerWidth / 2 - e.pageX) / 80;
-        let yAxis = (window.innerHeight / 2 - e.pageY) / 80;
-        anime({ targets: tablet, rotateY: -xAxis, rotateX: yAxis, duration: 500, easing: 'easeOutQuad' });
-    });
-
-    window.submitProposal = () => {
-        const proposal = document.getElementById('proposal').value;
-        if (proposal.length < 20) {
-            return anime({ targets: '#proposal', translateX: [0, -10, 10, 0], duration: 400 });
-        }
-
-        toast.classList.add('show');
-        cipherEffect(submitBtn, "TRANSMITTING...");
-
-        setTimeout(() => {
-            if(confirm("Analysis Received. Transmit to the Reality Feed?")) {
-                window.location.href = 'reality.html';
-            }
-            toast.classList.remove('show');
-            cipherEffect(submitBtn, "SUBMIT TO MANAGER");
-        }, 2500);
-    };
-
-    window.addEventListener('resize', initCanvas);
-
-
+    // Run Boot
     boot();
-    
 });

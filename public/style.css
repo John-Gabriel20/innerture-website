@@ -104,7 +104,8 @@ nav {
     z-index: 2;
 }
 
-.nav-links { list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0; }
+/* Added margin-right to separate it from the Sign In / Log Out buttons */
+.nav-links { list-style: none; display: flex; gap: 2rem; margin: 0 1.5rem 0 0; padding: 0; }
 .nav-links a { color: var(--text-main); text-decoration: none; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
 .nav-links a:hover { color: var(--neon-cyan); }
 
@@ -420,7 +421,7 @@ nav {
 .section-note { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
 
 /* --- Discovery Engine Internals --- */
-.discovery-section { padding: 5rem 5%; display: flex; justify-content: center; align-items: center; }
+.discovery-section { padding: 5rem 5%; display: flex; justify-content: center; align-items: center; perspective: 1500px; }
 .discovery-section .glass-card { max-width: 900px; width: 100%; margin: 0 auto; text-align: center; }
 .input-group { display: flex; gap: 1rem; margin-bottom: 2rem; }
 input[type="text"] { flex: 1; padding: 1rem 1.5rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 1rem; outline: none; transition: border 0.3s; }
@@ -430,7 +431,7 @@ input[type="text"]:focus { border-color: var(--neon-cyan); }
 .progress-container { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin: 1.5rem 0 0.5rem 0; overflow: hidden; }
 .progress-bar { height: 100%; width: 0%; background: var(--active-accent); box-shadow: 0 0 10px var(--active-accent); }
 .match-text { font-size: 0.9rem; margin-bottom: 2rem; }
-#start-sim-btn { opacity: 0; }
+#see-roadmap-btn { opacity: 0; } /* Updated ID */
 
 /* --- Extravagant Button Effects --- */
 
@@ -539,4 +540,47 @@ input[type="text"]:focus { border-color: var(--neon-cyan); }
     gap: 1rem;
     justify-content: center;
     margin-top: 2rem;
+}
+
+/* --- The Engine Modal --- */
+#engine-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#engine-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.engine-modal-content {
+    background: var(--bg-dark);
+    color: var(--text-main);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+}
+
+#engine-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    cursor: pointer;
 }
