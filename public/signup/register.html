@@ -378,11 +378,12 @@
         })();
 
         /* ── Form ── */
-        document.getElementById('registerBtn').addEventListener('click', function () {
+        document.getElementById('registerBtn').addEventListener('click', async function () {
             const name  = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const pass  = document.getElementById('password').value;
             const errEl = document.getElementById('register-error');
+            const btn   = this;
 
             errEl.style.display = 'none';
 
@@ -398,12 +399,35 @@
                 return;
             }
 
-            // Hook into your existing script.js logic here
-            // e.g. call your registerUser(name, email, pass) function
+            const origText = btn.textContent;
+            btn.textContent = 'Creating...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password: pass })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    errEl.textContent = data.error || 'Failed to register';
+                    errEl.style.display = 'block';
+                    return;
+                }
+
+                localStorage.setItem('loggedInUser', JSON.stringify(data.user));
+                window.location.href = '/'; 
+            } catch (err) {
+                errEl.textContent = 'Could not connect. ' + err.message;
+                errEl.style.display = 'block';
+            } finally {
+                btn.textContent = origText;
+                btn.disabled = false;
+            }
         });
     </script>
-
-    <!-- Your existing auth script -->
-    <script src="/login/script.js?v=4"></script>
 </body>
 </html>

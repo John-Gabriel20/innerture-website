@@ -9,9 +9,101 @@ document.addEventListener("DOMContentLoaded", () => {
     const glassCards = document.querySelectorAll(".glass-card");
     const heroBtn = document.querySelector('.primary-btn');
     const progressBar = document.querySelector('.scroll-progress');
-    const startSimBtn = document.getElementById("start-sim-btn"); 
+    const startSimBtn = document.getElementById("start-sim-btn");
+    const signInBtn = document.getElementById('signin-btn');
+    const premiumBuyBtn = document.getElementById('premium-buy-btn');
+    const paywallModal = document.getElementById('paywall-modal');
+    const paywallBuyBtn = document.getElementById('paywall-buy-btn');
+    const paywallCancelBtn = document.getElementById('paywall-cancel-btn');
+    const paywallContent = document.querySelector('.modal-content');
 
-    let currentRoleSlug = ""; 
+    function showPaywall() {
+        if (!paywallModal) return;
+        paywallModal.classList.add('active');
+        anime({
+            targets: paywallContent,
+            scale: [0.8, 1],
+            translateY: [20, 0],
+            opacity: [0, 1],
+            duration: 600,
+            easing: 'easeOutElastic(1, .6)'
+        });
+    }
+
+    function hidePaywall() {
+        if (!paywallModal) return;
+        anime({
+            targets: paywallContent,
+            scale: [1, 0.8],
+            translateY: [0, 20],
+            opacity: [1, 0],
+            duration: 300,
+            easing: 'easeInQuad',
+            complete: () => {
+                paywallModal.classList.remove('active');
+            }
+        });
+    }
+
+    if (premiumBuyBtn) {
+        premiumBuyBtn.addEventListener('click', showPaywall);
+    }
+
+    if (paywallBuyBtn) {
+        paywallBuyBtn.addEventListener('click', () => {
+            showModal('Purchase Successful', 'Your premium access is now active! Enjoy the full Innerture experience.', 'Continue', hidePaywall);
+        });
+    }
+
+    if (paywallCancelBtn) {
+        paywallCancelBtn.addEventListener('click', hidePaywall);
+    }
+
+    // Close paywall when clicking outside (on overlay)
+    if (paywallModal) {
+        paywallModal.addEventListener('click', (e) => {
+            if (e.target === paywallModal) hidePaywall();
+        });
+    }
+
+    const roadmapPanel = document.getElementById('roadmap-panel');
+
+    if (roadmapPanel) {
+        roadmapPanel.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target && target.id === 'premium-buy-btn') {
+                e.preventDefault();
+                showPaywall();
+            }
+        });
+    }
+
+    const roadmapButtons = document.querySelectorAll('.plan-btn');
+
+    let currentRoleSlug = "";
+
+    const roadmapContent = {
+        free: {
+            title: 'Simple Path',
+            bullets: [
+                "Get a bachelor's degree",
+                "Add a master's or certification",
+                'Build real experience',
+                'Stay focused on the next move'
+            ],
+            note: 'The free roadmap gives you a clean, easy-to-follow path with step-by-step milestones.'
+        },
+        premium: {
+            title: 'Premium Journey',
+            bullets: [
+                'Save progress with a checklist',
+                'See employers that recognize certifications',
+                'Estimate salary gains for new skills',
+                'Localized advice and a PDF guide'
+            ],
+            note: 'Premium turns your roadmap into a personalized coach that grows with your goals.'
+        }
+    };
 
     const paths = {
         media: { title: "Creative Media", color: "#b026ff" },
@@ -27,6 +119,26 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/[^a-z0-9]+/g, '_')
             .replace(/(^_|_$)+/g, '');
     };
+
+    function renderRoadmap(plan) {
+        const planData = roadmapContent[plan];
+        if (!planData || !roadmapPanel) return;
+        roadmapButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.plan === plan));
+        const basicSide = roadmapPanel.querySelector('.roadmap-basic');
+        const premiumSide = roadmapPanel.querySelector('.roadmap-premium');
+        if (!basicSide || !premiumSide) return;
+
+        basicSide.innerHTML = `
+            <h3>${planData.title}</h3>
+            <ul>${planData.bullets.map(item => `<li>${item}</li>`).join('')}</ul>
+        `;
+        premiumSide.innerHTML = `
+            <h3>Premium perks</h3>
+            <p>${planData.note}</p>
+            ${plan === 'premium' ? '<button id="premium-buy-btn" class="btn primary-btn" style="margin-top: 1.5rem;">Buy Now</button>' : ''}
+        `;
+        premiumSide.classList.toggle('hidden', plan !== 'premium');
+    }
 
     let scrollVelocity = 0;
     let lastScrollY = window.scrollY;
@@ -205,13 +317,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Optimized anti-jitter 3D mouse tracking
     document.addEventListener("mousemove", (e) => {
-        let xAxis = (window.innerWidth / 2 - e.pageX) / 50;
-        let yAxis = (window.innerHeight / 2 - e.pageY) / 50;
-        glassCards.forEach(card => {
-            if (window.getComputedStyle(card).opacity > 0.1) {
-                anime({ targets: card, rotateY: -xAxis, rotateX: yAxis, duration: 500, easing: 'easeOutQuad' });
-            }
+        let xAxis = (window.innerWidth / 2 - e.pageX) / 120;
+        let yAxis = (window.innerHeight / 2 - e.pageY) / 120;
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        
+        requestAnimationFrame(() => {
+            tiltCards.forEach(card => {
+                if (window.getComputedStyle(card).opacity > 0.1) {
+                    const rotateY = Math.max(-8, Math.min(8, -xAxis));
+                    const rotateX = Math.max(-8, Math.min(8, yAxis));
+                    
+                    card.style.transform = `translateZ(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+                }
+            });
         });
     });
 
@@ -220,10 +340,27 @@ document.addEventListener("DOMContentLoaded", () => {
         inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") triggerAnalysis(); });
     }
 
+    roadmapButtons.forEach(button => {
+        button.addEventListener('click', () => renderRoadmap(button.dataset.plan));
+    });
+
+    renderRoadmap('free');
+
     anime.timeline({ easing: 'easeOutExpo' })
         .add({ targets: 'nav', translateY: [-50, 0], opacity: [0, 1], duration: 1000 })
         .add({ targets: '.hero-content h1', translateY: [30, 0], opacity: [0, 1], duration: 1000 }, '-=600')
         .add({ targets: '#discovery .glass-card', scale: [0.8, 1], opacity: [0, 1], duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=800');
+
+    const revealCards = document.querySelectorAll('.scroll-reveal .glass-card, .scroll-reveal .solid-card');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                anime({ targets: entry.target, opacity: [0, 1], translateY: [80, 0], duration: 900, easing: 'easeOutExpo' });
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    revealCards.forEach(card => revealObserver.observe(card));
 
     // Handle User Greeting
     const loggedInUserStr = localStorage.getItem('loggedInUser');
@@ -237,8 +374,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userGreeting && userNameSpan && user.name) {
                 userNameSpan.innerText = user.name;
                 userGreeting.classList.remove('hidden');
-                
+                if (signInBtn) signInBtn.classList.add('hidden');
+
                 if (logoutBtn) {
+                    logoutBtn.classList.remove('hidden');
                     logoutBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         localStorage.removeItem('loggedInUser');
@@ -256,7 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalMessage = document.getElementById('modal-message');
     const modalPrimaryBtn = document.getElementById('modal-primary-btn');
     const modalSecondaryBtn = document.getElementById('modal-secondary-btn');
-    const modalContent = document.querySelector('.modal-content');
+    const authModalContent = authModal ? authModal.querySelector('.modal-content') : null;
 
     function showModal(title, message, primaryText, primaryAction, secondaryText, secondaryAction) {
         if (!authModal) return;
@@ -282,29 +421,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         authModal.classList.add('active');
-        anime({
-            targets: modalContent,
-            scale: [0.8, 1],
-            translateY: [20, 0],
-            opacity: [0, 1],
-            duration: 600,
-            easing: 'easeOutElastic(1, .6)'
-        });
+        if (authModalContent) {
+            anime({
+                targets: authModalContent,
+                scale: [0.8, 1],
+                translateY: [20, 0],
+                opacity: [0, 1],
+                duration: 600,
+                easing: 'easeOutElastic(1, .6)'
+            });
+        }
     }
 
     function hideModal() {
         if (!authModal) return;
-        anime({
-            targets: modalContent,
-            scale: [1, 0.8],
-            translateY: [0, 20],
-            opacity: [1, 0],
-            duration: 300,
-            easing: 'easeInQuad',
-            complete: () => {
-                authModal.classList.remove('active');
-            }
-        });
+        if (authModalContent) {
+            anime({
+                targets: authModalContent,
+                scale: [1, 0.8],
+                translateY: [0, 20],
+                opacity: [1, 0],
+                duration: 300,
+                easing: 'easeInQuad',
+                complete: () => {
+                    authModal.classList.remove('active');
+                }
+            });
+        } else {
+            authModal.classList.remove('active');
+        }
     }
 
     if (startSimBtn) {

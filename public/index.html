@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Innerture | Your future, prototyped.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,11 +15,15 @@
     <div class="scroll-progress"></div>
 
     <nav>
-        <div class="logo">INNERTURE</div>
-        <div id="user-greeting" class="user-greeting hidden">Welcome, <span id="user-name"></span>! <a href="#" id="logout-btn" style="font-size: 0.8rem; margin-left: 10px; color: var(--neon-cyan);">Log Out</a></div>
-        <ul class="nav-links">
-            <!-- Removed Discovery Engine, Simulations, and Reality Feed links -->
-        </ul>
+        <div class="logo">INNER<span>TURE</span></div>
+        <div id="user-greeting" class="user-greeting hidden">Welcome, <span id="user-name"></span>!</div>
+        <div class="nav-right">
+            <a href="/login/" id="signin-btn" class="logout-btn">Sign In</a>
+            <a href="#" id="logout-btn" class="logout-btn hidden">Log Out</a>
+            <ul class="nav-links">
+                <!-- Removed Discovery Engine, Simulations, and Reality Feed links -->
+            </ul>
+        </div>
     </nav>
 
     <header class="hero">
@@ -27,10 +34,64 @@
         </div>
     </header>
 
+    <section id="roadmap" class="content-section scroll-reveal">
+        <div class="solid-card roadmap-card wide-card tilt-card">
+            <h2>Roadmap Reveal</h2>
+            <p>Get a clear, actionable plan for your career journey with our intuitive roadmap.</p>
+            <div class="roadmap-switch">
+                <button class="plan-btn active" data-plan="free">Free Roadmap</button>
+                <button class="plan-btn" data-plan="premium">Premium Journey</button>
+            </div>
+            <div class="roadmap-panel" id="roadmap-panel">
+                <div class="roadmap-side roadmap-basic">
+                    <h3>Free Simple Roadmap</h3>
+                    <ul>
+                        <li>Basic roadmap</li>
+                        <li>No personalization</li>
+                        <li>No advanced features</li>
+                    </ul>
+                </div>
+                <div class="roadmap-side roadmap-premium hidden">
+                    <h3>Premium perks</h3>
+                    <ul>
+                        <li>Progress checklist that saves automatically</li>
+                        <li>Certification recognition from top employers</li>
+                        <li>Salary increase estimates for every new skill</li>
+                        <li>Localized guidance and PDF-ready download</li>
+                    </ul>
+                    <button id="premium-buy-btn" class="btn primary-btn" style="margin-top: 1.5rem;">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Simulation Section with tilt-card -->
+    <section id="simulations" class="content-section scroll-reveal">
+        <div class="glass-card enhanced-card tilt-card">
+            <div class="card-watermark">⬡</div>
+            <div class="card-icon">◈</div>
+            <h2>Real Job Simulation</h2>
+            <div class="neon-divider"></div>
+            <p>Experience real-life scenarios that simulate <span class="neon-highlight">exactly what the job feels like</span>. Jump into our <span class="neon-highlight">simulated environment</span> to test-drive the daily tasks and rhythm of the role so you know what you're getting into before you commit.</p>
+        </div>
+    </section>
+
+    <!-- Enhanced Insights Section with tilt-card -->
+    <section id="insights" class="content-section scroll-reveal">
+        <div class="solid-card insights-card wide-card enhanced-card tilt-card">
+            <div class="card-watermark">❖</div>
+            <div class="card-icon">⎈</div>
+            <h2>Get Real Insights from Real Professionals</h2>
+            <div class="neon-divider insights-divider"></div>
+            <p>We provide exclusive, professional insights on what the real job <span class="neon-highlight">actually feels like day to day</span>. Skip the generic descriptions and learn the truth <span class="neon-highlight">directly from experts</span> in the field.</p>
+        </div>
+    </section>
+
     <section id="discovery" class="discovery-section">
-        <div class="glass-card intake-container">
+        <div class="glass-card intake-container tilt-card">
             <h2>The Discovery Engine</h2>
-            <p>Tell us what you're naturally good at, what you enjoy doing, or how you solve problems.</p>
+            <p>Tell us what you’re naturally good at and we’ll match it with a role that feels like you.</p>
+            <p class="section-note">This is where your instincts meet practical career feedback.</p>
             
             <div class="input-group">
                 <input type="text" id="strength-input" placeholder="e.g., 'I love solving puzzles' or 'I'm good at visual storytelling'" autocomplete="off">
@@ -53,19 +114,28 @@
         </div>
     </section>
 
-    <section id="simulations" class="content-section scroll-reveal">
-        <div class="glass-card">
-            <h2>Simulation Hub</h2>
-            <p>Your vibespace awaits. Awaiting Discovery Engine input to generate your custom scenario...</p>
+    <!-- Paywall Modal -->
+    <div id="paywall-modal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <h2 id="paywall-title">Unlock Premium Access</h2>
+            <div class="paywall-content">
+                <p class="paywall-price"><span class="price-value">$5.99</span><span class="price-currency"> USD</span></p>
+                <p class="paywall-description">Get instant access to:</p>
+                <ul class="paywall-features">
+                    <li>Premium Roadmap with interactive checklists</li>
+                    <li>Real Job Simulations with realistic scenarios</li>
+                    <li>Reality Feed with insights from professionals</li>
+                    <li>Salary increase estimates for every skill</li>
+                    <li>Downloadable PDF guides</li>
+                    <li>Localized content for your region</li>
+                </ul>
+            </div>
+            <div class="modal-actions">
+                <button id="paywall-buy-btn" class="btn primary-btn">Complete Purchase</button>
+                <button id="paywall-cancel-btn" class="btn secondary-btn">Cancel</button>
+            </div>
         </div>
-    </section>
-
-    <section id="reality-feed" class="content-section scroll-reveal">
-        <div class="glass-card">
-            <h2>The Reality Feed</h2>
-            <p>Truth Logs: Unfiltered reviews from real professionals. Burnout metrics, salary realities, and daily grit levels.</p>
-        </div>
-    </section>
+    </div>
 
     <!-- Custom Modal -->
     <div id="auth-modal" class="modal-overlay">
