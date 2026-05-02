@@ -487,7 +487,7 @@
                 return;
             }
             localStorage.setItem('loggedInUser', JSON.stringify(data.user));
-            window.location.href = '/';
+            window.location.href = '../index.html';
         } catch (err) {
             errorDiv.textContent = 'Could not connect. ' + err.message;
             errorDiv.style.display = 'block';

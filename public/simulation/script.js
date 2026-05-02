@@ -321,7 +321,155 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- 4. BOOT AND INITIALIZE DATA ---
+    // --- 4. ENGINE MODAL LOGIC (ADDED) ---
+    const engineNav = document.getElementById('engine-nav-link');
+    const engineModal = document.getElementById('engine-modal');
+    const engineCloseBtn = document.getElementById('engine-close-btn');
+
+    if (engineNav) {
+        engineNav.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            if (engineModal) {
+                engineModal.classList.add('active');
+                const content = engineModal.querySelector('.modal-content');
+                if (content) anime({ targets: content, scale: [0.8, 1], translateY: [20, 0], opacity: [0, 1], duration: 600, easing: 'easeOutElastic(1, .6)' });
+            }
+        });
+    }
+    
+    function hideEngineModal() {
+        if (engineModal && engineModal.classList.contains('active')) {
+            const content = engineModal.querySelector('.modal-content');
+            if (content) {
+                anime({
+                    targets: content, scale: [1, 0.8], translateY: [0, 20], opacity: [1, 0],
+                    duration: 300, easing: 'easeInQuad',
+                    complete: () => engineModal.classList.remove('active')
+                });
+            } else {
+                engineModal.classList.remove('active');
+            }
+        }
+    }
+
+    if (engineCloseBtn) engineCloseBtn.addEventListener('click', hideEngineModal);
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === engineModal) hideEngineModal();
+    });
+
+    const inputField = document.getElementById("strength-input");
+    const analyzeBtn = document.getElementById("analyze-btn");
+    const resultArea = document.getElementById("result-area");
+    const modalRoleCategory = document.getElementById("modal-role-category");
+    const modalRoleTitle = document.getElementById("modal-role-title");
+    const modalRoleReason = document.getElementById("modal-role-reason");
+    const modalMatchPercent = document.getElementById("modal-match-percent");
+    const applyRoadmapBtn = document.getElementById("apply-roadmap-btn");
+
+    const enginePaths = {
+        media: { title: "Creative Media", color: "#b026ff" },
+        computing: { title: "Creative Computing", color: "#00f3ff" },
+        cyber: { title: "Cybersecurity", color: "#39ff14" },
+        unknown: { title: "Unrecognized Input", color: "#ff3333" }
+    };
+
+    const slugifyEngine = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+    let tempRoleSlug = "";
+
+    async function triggerAnalysis() {
+        const text = inputField.value.trim();
+        if (!text) {
+            anime({ targets: inputField, translateX: [0, -10, 10, -10, 10, 0], duration: 400 });
+            return;
+        }
+
+        cipherEffect(analyzeBtn, "UPLOADING...");
+        const pulse = anime({
+            targets: inputField,
+            boxShadow: [`0 0 0px var(--accent)`, `0 0 30px var(--accent)`, `0 0 0px var(--accent)`],
+            duration: 1000, loop: true, easing: 'easeInOutSine'
+        });
+
+        try {
+            const response = await fetch('/api/analyze.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userInput: text })
+            });
+
+            if (!response.ok) throw new Error("Server Error");
+            const aiData = await response.json();
+            
+            pulse.pause();
+            cipherEffect(analyzeBtn, "ANALYZE");
+            renderEngineResult(aiData);
+
+        } catch (error) {
+            console.error("AI Error:", error);
+            pulse.pause();
+            cipherEffect(analyzeBtn, "OFFLINE");
+            renderEngineResult({ category: "unknown", role: "Connection Lost", accuracy: 0, reason: "Could not connect to the neural net." });
+        }
+    }
+
+    function renderEngineResult(aiData) {
+        const pathData = enginePaths[aiData.category] || enginePaths.unknown;
+        resultArea.classList.remove("hidden");
+        
+        if(aiData.role) {
+            tempRoleSlug = slugifyEngine(aiData.role);
+            applyRoadmapBtn.dataset.tempRole = aiData.role;
+            applyRoadmapBtn.dataset.tempCategory = aiData.category;
+            applyRoadmapBtn.dataset.tempAccuracy = aiData.accuracy;
+            applyRoadmapBtn.dataset.tempReason = aiData.reason;
+        }
+        
+        modalRoleCategory.innerText = pathData.title;
+        modalRoleCategory.style.color = pathData.color;
+        modalRoleCategory.style.borderColor = pathData.color;
+        cipherEffect(modalRoleTitle, aiData.role);
+        modalRoleReason.innerText = `"${aiData.reason}"`;
+
+        if (aiData.category === "unknown") {
+            document.getElementById('modal-match-progress').style.width = '0%';
+            modalMatchPercent.innerText = "0";
+            applyRoadmapBtn.style.opacity = 0;
+            return;
+        }
+
+        const counterObj = { val: 0 };
+        anime.timeline({ easing: 'easeOutExpo' })
+            .add({ targets: resultArea, opacity: [0, 1], translateY: [20, 0], duration: 600 })
+            .add({ targets: '#modal-match-progress', width: ['0%', `${aiData.accuracy}%`], backgroundColor: pathData.color, boxShadow: `0 0 10px ${pathData.color}`, duration: 1500, easing: 'easeOutElastic(1, .6)' }, '-=200')
+            .add({ targets: counterObj, val: aiData.accuracy, round: 1, duration: 1500, update: () => { modalMatchPercent.innerText = counterObj.val; } }, '-=1500')
+            .add({ targets: applyRoadmapBtn, opacity: [0, 1], easing: 'easeOutQuad', duration: 500 }, '-=800');
+    }
+
+    if (analyzeBtn && inputField) {
+        analyzeBtn.addEventListener("click", triggerAnalysis);
+        inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") triggerAnalysis(); });
+    }
+
+    if (applyRoadmapBtn) {
+        applyRoadmapBtn.addEventListener("click", () => {
+            if (tempRoleSlug) {
+                localStorage.setItem('userPath', tempRoleSlug);
+                localStorage.setItem('courseData', JSON.stringify({
+                    role: applyRoadmapBtn.dataset.tempRole,
+                    slug: tempRoleSlug,
+                    category: applyRoadmapBtn.dataset.tempCategory,
+                    accuracy: applyRoadmapBtn.dataset.tempAccuracy,
+                    reason: applyRoadmapBtn.dataset.tempReason
+                }));
+                // Reload the page to load the new simulation!
+                window.location.reload(); 
+            }
+        });
+    }
+
+    // --- 5. BOOT AND INITIALIZE DATA ---
     function boot() {
         document.documentElement.style.setProperty('--accent', current.accent);
         document.documentElement.style.setProperty('--accent-dim', current.accentDim);

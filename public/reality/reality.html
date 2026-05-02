@@ -12,8 +12,8 @@
     <script src="https://unpkg.com/animejs@3.2.1/lib/anime.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Angkor&family=Asimovian&family=Bitcount+Grid+Double:wght@100..900&family=Bungee+Tint&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Chango&family=Silkscreen:wght@400;700&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Angkor&family=Asimovian&family=Bitcount+Grid+Double:wght@100..900&family=Bungee+Tint&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Chango&family=Silkscreen:wght@400;700&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
 </head>
 <body>
  
@@ -22,10 +22,11 @@
 <nav class="top-nav">
     <div class="logo">INNER<span>TURE</span></div>
     <ul class="nav-links">
-        <li><a href="/#discovery">The Engine</a></li>
-        <li><a href="/simulation/sim.html">Simulations</a></li>
+        <!-- MODIFIED: Triggers the modal instead of redirecting -->
+        <li><a href="#" id="engine-nav-link">The Engine</a></li>
+        <li><a href="../simulation/sim.html">Simulations</a></li>
         <li><a href="/reality/reality.html">Reality Feed</a></li>
-        <li><a href="/roadmap/index.html">Roadmap</a></li>
+        <li><a href="../roadmap/index.html">Roadmap</a></li>
     </ul>
 </nav>
  
@@ -79,6 +80,35 @@
  
 <div id="toast" class="toast">Feed synced to your path.</div>
 
-<script src = 'reality.js'></script>
+<!-- ADDED: The Discovery Engine Modal -->
+<div id="engine-modal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 700px; padding: 3.5rem; position: relative; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 16px; box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.02), 0 30px 80px rgba(0, 0, 0, 0.5);">
+        <button id="engine-close-btn" style="position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: var(--muted); font-size: 2rem; cursor: pointer; transition: color 0.3s;">&times;</button>
+        <h2 style="color: #fff; font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: none; font-family: 'Chakra Petch', sans-serif;">The Discovery Engine</h2>
+        <p style="color: var(--muted); margin-bottom: 2.5rem; font-size: 1.05rem;">Tell us what you’re naturally good at and we’ll generate a brand new roadmap matching your instincts.</p>
+        
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;">
+            <input type="text" id="strength-input" placeholder="e.g., 'I love solving puzzles' or 'I'm a great storyteller'" autocomplete="off" style="flex: 1; padding: 1rem 1.5rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 1rem; outline: none; transition: border 0.3s;">
+            <button id="analyze-btn" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 0.8rem 1.5rem; border-radius: 4px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s ease-in-out;">Analyze</button>
+        </div>
+
+        <div id="result-area" class="hidden" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); opacity: 0;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem;">
+                <span id="modal-role-category" style="display: inline-block; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; border: 1px solid var(--accent); color: var(--accent); padding: 0.4rem 1rem; border-radius: 30px; background: rgba(0, 0, 0, 0.3);">Category</span>
+                <h3 id="modal-role-title" style="color: #fff; font-size: 2rem; margin: 0; text-shadow: 0 0 15px rgba(255, 255, 255, 0.2); font-family: 'Chakra Petch', sans-serif;">Specific Role</h3>
+            </div>
+            <p id="modal-role-reason" style="font-size: 1.05rem; color: var(--text); font-style: italic; margin-bottom: 2rem;">Why you? ...</p>
+            
+            <div style="width: 100%; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; margin: 1.5rem 0 0.5rem 0; overflow: hidden;">
+                <div id="modal-match-progress" style="height: 100%; width: 0%; background: var(--accent); box-shadow: 0 0 10px var(--accent);"></div>
+            </div>
+            <p style="font-size: 0.95rem; margin-bottom: 2rem; color: var(--muted);">Match accuracy: <span id="modal-match-percent" style="color: #fff; font-weight: bold; font-size: 1.2rem;">0</span>%</p>
+            
+            <button id="apply-roadmap-btn" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 0.8rem 1.5rem; border-radius: 4px; font-family: 'Chakra Petch', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s ease-in-out; opacity: 0;">Load Reality Feed</button>
+        </div>
+    </div>
+</div>
+
+<script src="reality.js"></script>
 </body>
 </html>

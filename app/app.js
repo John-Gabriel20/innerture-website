@@ -10,7 +10,7 @@ const port = 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/mywebapp', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,8 +21,13 @@ mongoose.connect('mongodb://localhost:27017/mywebapp', { useNewUrlParser: true, 
 const users = require('./routes/users');
 app.use('/users', users);
 
+// Default route - serve main index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 // Admin routes
-app.use('/admin', auth, express.static(path.join(__dirname, 'public/admin')));
+app.use('/admin', auth, express.static(path.join(__dirname, '..', 'public/admin')));
 
 // Login route
 app.post('/login', async (req, res) => {
