@@ -3,9 +3,9 @@ const careerData = {
   // --- CYBERSECURITY ---
   'digital-forensics': {
     name:'Digital Forensics', 
-    accent:'#39ff14',
-    accentDim:'rgba(57, 255, 20, 0.10)', 
-    accentGlow:'rgba(57, 255, 20, 0.25)',
+    accent:'#8f6dff',
+    accentDim:'rgba(143,109,255,0.10)', 
+    accentGlow:'rgba(143,109,255,0.25)',
     reviews:[
       { title:'Evidence Analyst', hiringLevel:'Senior', workStyle:'Hybrid 3d/wk', workplaceRating:7, salary:[66000,78000,92000],
         reviewer:'Eric Zimmerman',
@@ -21,9 +21,9 @@ const careerData = {
   },
   'cybersecurity-consultant': {
     name:'Cybersecurity Consultant', 
-    accent:'#39ff14',
-    accentDim:'rgba(57, 255, 20, 0.10)', 
-    accentGlow:'rgba(57, 255, 20, 0.25)',
+    accent:'#32ff7e',
+    accentDim:'rgba(50,255,126,0.10)', 
+    accentGlow:'rgba(50,255,126,0.25)',
     reviews:[
       { title:'Risk Advisor', hiringLevel:'Senior', workStyle:'Remote', workplaceRating:8, salary:[72000,88000,104000],
         reviewer:'Kevin Mitnick',
@@ -39,9 +39,9 @@ const careerData = {
   },
   'penetration-tester': {
     name:'Penetration Tester', 
-    accent:'#39ff14',
-    accentDim:'rgba(57, 255, 20, 0.10)', 
-    accentGlow:'rgba(57, 255, 20, 0.25)',
+    accent:     "#ff4d6d",
+    accentDim:  "rgba(255,77,109,0.10)",
+    accentGlow: "rgba(255,77,109,0.25)",
     reviews:[
       { title:'Red Team Operator', hiringLevel:'Mid-Level', workStyle:'Remote', workplaceRating:8, salary:[80000,96000,112000],
         reviewer:'Heath Adams',
@@ -57,9 +57,9 @@ const careerData = {
   },
   'security-analyst': {
     name:'Security Analyst', 
-    accent:'#39ff14',
-    accentDim:'rgba(57, 255, 20, 0.10)', 
-    accentGlow:'rgba(57, 255, 20, 0.25)',
+    accent:'#fae100',
+            accentDim:'rgba(250,225,0,0.10)', 
+            accentGlow:'rgba(250,225,0,0.25)',
     reviews:[
       { title:'Threat Analyst', hiringLevel:'Junior', workStyle:'Hybrid 3d/wk', workplaceRating:7, salary:[68000,82000,95000],
         reviewer:'John Strand',
@@ -77,9 +77,9 @@ const careerData = {
   // --- CREATIVE MEDIA ---
   'video-editor': {
     name:'Video Editor', 
-    accent:'#b026ff',
-    accentDim:'rgba(176, 38, 255, 0.10)', 
-    accentGlow:'rgba(176, 38, 255, 0.25)',
+    accent:'#00d3ff',
+            accentDim:'rgba(0,211,255,0.10)', 
+            accentGlow:'rgba(0,211,255,0.25)',
     reviews:[
       { title:'Post-Production Artist', hiringLevel:'Entry-Level', workStyle:'Remote', workplaceRating:8, salary:[62000,78000,94000],
         reviewer:'Hayden Hillier-Smith',
@@ -95,9 +95,9 @@ const careerData = {
   },
   'content-creator': {
     name:'Content Creator', 
-    accent:'#b026ff',
-    accentDim:'rgba(176, 38, 255, 0.10)', 
-    accentGlow:'rgba(176, 38, 255, 0.25)',
+    accent:'#ff6bf3',
+    accentDim:'rgba(255,107,243,0.10)', 
+    accentGlow:'rgba(255,107,243,0.25)',
     reviews:[
       { title:'Social Media Producer', hiringLevel:'Junior', workStyle:'Remote', workplaceRating:7, salary:[50000,66000,80000],
         reviewer:'Roberto Blake',
@@ -113,9 +113,9 @@ const careerData = {
   },
   'creative-producer': {
     name:'Creative Producer', 
-    accent:'#b026ff',
-    accentDim:'rgba(176, 38, 255, 0.10)', 
-    accentGlow:'rgba(176, 38, 255, 0.25)',
+    accent:'#ff7f2a',
+            accentDim:'rgba(255,127,42,0.10)', 
+            accentGlow:'rgba(255,127,42,0.25)',
     reviews:[
       { title:'Production Coordinator', hiringLevel:'Mid-Level', workStyle:'On-site 5d/wk', workplaceRating:7, salary:[64000,78000,92000],
         reviewer:'David Fincher',
@@ -131,9 +131,9 @@ const careerData = {
   },
   'photographer-videographer': {
     name:'Photographer/Videographer', 
-    accent:'#b026ff',
-    accentDim:'rgba(176, 38, 255, 0.10)', 
-    accentGlow:'rgba(176, 38, 255, 0.25)',
+    accent:'#7cff66',
+            accentDim:'rgba(124,255,102,0.10)', 
+            accentGlow:'rgba(124,255,102,0.25)',
     reviews:[
       { title:'Location Shooter', hiringLevel:'Entry-Level', workStyle:'Freelance', workplaceRating:8, salary:[60000,74000,88000],
         reviewer:'Peter McKinnon',
@@ -151,9 +151,9 @@ const careerData = {
   // --- CREATIVE COMPUTING ---
   'data-scientist': {
     name:'Data Scientist', 
-    accent:'#00f3ff',
-    accentDim:'rgba(0, 243, 255, 0.10)', 
-    accentGlow:'rgba(0, 243, 255, 0.25)',
+    accent:'#7b55ff',
+            accentDim:'rgba(123,85,255,0.10)', 
+            accentGlow:'rgba(123,85,255,0.25)',
     reviews:[
       { title:'Model Developer', hiringLevel:'Senior', workStyle:'Remote', workplaceRating:8, salary:[76000,90000,104000],
         reviewer:'Cassie Kozyrkov',
@@ -169,9 +169,9 @@ const careerData = {
   },
   'ux-ui-designer': {
     name:'UX/UI Designer', 
-    accent:'#00f3ff',
-    accentDim:'rgba(0, 243, 255, 0.10)', 
-    accentGlow:'rgba(0, 243, 255, 0.25)',
+    accent:'#ffb347',
+            accentDim:'rgba(255,179,71,0.10)', 
+            accentGlow:'rgba(255,179,71,0.25)',
     reviews:[
       { title:'Product Designer', hiringLevel:'Junior', workStyle:'Hybrid 3d/wk', workplaceRating:8, salary:[70000,84000,98000],
         reviewer:'Don Norman',
@@ -187,9 +187,9 @@ const careerData = {
   },
   'full-stack-developer': {
     name:'Full Stack Developer', 
-    accent:'#00f3ff',
-    accentDim:'rgba(0, 243, 255, 0.10)', 
-    accentGlow:'rgba(0, 243, 255, 0.25)',
+    accent:'#42d7ff',
+            accentDim:'rgba(66,215,255,0.10)', 
+            accentGlow:'rgba(66,215,255,0.25)',
     reviews:[
       { title:'Platform Engineer', hiringLevel:'Mid-Level', workStyle:'Remote', workplaceRating:8, salary:[76000,90000,104000],
         reviewer:'Dan Abramov',
@@ -205,9 +205,9 @@ const careerData = {
   },
   'graphic-designer': {
     name:'Graphic Designer',
-    accent:'#00f3ff',
-    accentDim:'rgba(0, 243, 255, 0.10)', 
-    accentGlow:'rgba(0, 243, 255, 0.25)',
+    accent:     "#ff5a99",
+            accentDim:'rgba(255,90,153,0.10)', 
+            accentGlow:'rgba(255,90,153,0.25)',
     reviews:[
       { title:'Brand Designer', hiringLevel:'Entry-Level', workStyle:'Hybrid 3d/wk', workplaceRating:7, salary:[58000,72000,86000],
         reviewer:'Chris Do',
