@@ -129,6 +129,19 @@ const roadmapDatabase = {
 
 document.addEventListener("DOMContentLoaded", () => {
     
+    // --- SMART PREMIUM CHECK HELPER ---
+    // Instead of relying on a global 'isPremium' tag, we look inside the SPECIFIC user's profile.
+    function checkPremiumStatus() {
+        const userStr = localStorage.getItem('loggedInUser');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                return userObj.isPremium === true;
+            } catch(e) { return false; }
+        }
+        return false;
+    }
+
     // 1. Initialize Neural Canvas Background
     const canvas = document.getElementById("neural-canvas");
     const ctx = canvas ? canvas.getContext("2d") : null;
@@ -212,10 +225,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-    // 3. Load & Process Roadmap Data (SMART FUZZY MATCHER)
+    // 3. Load & Process Roadmap Data
     let roleKey = localStorage.getItem('userPath');
-    const isPremium = localStorage.getItem('isPremium') === 'true';
+    const isPremium = checkPremiumStatus(); // Replaced the generic check!
 
     let data = null;
 
@@ -364,6 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
             pdfBtn.classList.remove('hidden');
             // FIXED THE PDF DOWNLOAD LOGIC
             pdfBtn.addEventListener('click', () => {
+                // Open all hidden details
                 document.querySelectorAll('details').forEach(el => el.setAttribute('open', 'true'));
                 document.body.classList.add('is-printing');
                 document.querySelectorAll('.tilt-card').forEach(c => {
@@ -420,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleNavClick(e) {
-        const isUserPremium = localStorage.getItem('isPremium') === 'true';
+        const isUserPremium = checkPremiumStatus(); // Replaced generic check!
         if (!isUserPremium) {
             e.preventDefault(); 
             showModal(premiumModal);
@@ -451,7 +464,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (paywallBuyBtn) {
         paywallBuyBtn.addEventListener('click', () => {
-            localStorage.setItem('isPremium', 'true');
+            // FIXED: Attach Premium status ONLY to the currently logged-in user
+            const userStr = localStorage.getItem('loggedInUser');
+            if (userStr) {
+                try {
+                    const userObj = JSON.parse(userStr);
+                    userObj.isPremium = true; 
+                    localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+                } catch(e) { console.error('Failed to update user profile:', e); }
+            }
+            
             hideModals();
             alert('Purchase Successful! Access Unlocked.');
             window.location.reload(); 
@@ -634,6 +656,7 @@ function initProgressTracking() {
         const percentage = Math.round((completedSteps / totalSteps) * 100);
         if (globalProgressFill) {
             globalProgressFill.style.width = `${percentage}%`;
+            // Add a pulse effect if progress is active
             if (percentage > 0) globalProgressFill.classList.add('active');
         }
         if (progressText) progressText.innerText = `${percentage}%`;
