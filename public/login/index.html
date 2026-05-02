@@ -8,18 +8,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --bg: #0b0c10;
-            --surface: rgba(255,255,255,0.03);
+            --surface: rgba(255,255,255,0.04);
+            --surface-hover: rgba(255,255,255,0.07);
             --border: rgba(255,255,255,0.09);
             --border-focus: rgba(143,109,255,0.6);
             --text-primary: #f0f0f0;
             --text-secondary: #666;
             --accent: #8f6dff;
             --accent-glow: rgba(143,109,255,0.35);
-            --accent-dim: rgba(143,109,255,0.12);
             --radius: 8px;
             --font: 'Chakra Petch', sans-serif;
         }
@@ -31,8 +35,10 @@
             font-family: var(--font);
             font-size: 14px;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* ── Canvas background ── */
         #neural-canvas {
             position: fixed;
             inset: 0;
@@ -42,38 +48,30 @@
 
         .bg-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(143,109,255,0.08) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            inset: 0;
             z-index: 1;
             pointer-events: none;
-            animation: pulseGlow 6s ease-in-out infinite;
+            background: radial-gradient(circle at 50% 50%, rgba(143,109,255,0.08) 0%, transparent 70%);
         }
 
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
-            50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.12); }
-        }
-
+        /* ── Nav ── */
         nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 20;
-            padding: 1.4rem 5%;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            padding: 1.4rem 5%;
             border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-            background: rgba(11,12,16,0.6);
+            backdrop-filter: blur(8px);
+            background: rgba(11,12,16,0.8);
         }
 
         .logo {
-            font-family: "Asimovian", sans-serif;
+            font-family: 'Asimovian', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: 4px;
@@ -81,15 +79,19 @@
             text-transform: uppercase;
             text-decoration: none;
         }
-        .logo span { color: var(--accent); }
+
+        .logo span {
+            color: var(--accent);
+        }
 
         .nav-tag {
             font-size: 10px;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
             color: var(--text-secondary);
         }
 
+        /* ── Page container ── */
         .page {
             position: relative;
             z-index: 10;
@@ -99,87 +101,108 @@
             justify-content: center;
             padding: 100px 24px 40px;
         }
+
+        /* ── Card ── */
         .card {
-            width: min(420px, calc(100vw - 40px));
-            background: rgba(14,15,20,0.9);
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.035);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            backdrop-filter: blur(20px);
-            overflow: hidden;
-            animation: cardIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
+            border-radius: 14px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset,
+                        0 40px 80px rgba(0,0,0,0.5);
+            animation: fadeUp 0.5s ease both;
         }
 
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(24px) scale(0.97); }
-            to   { opacity: 1; transform: none; }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card-accent {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.7;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
         }
 
         .card-body {
-            padding: 40px 36px 36px;
+            padding: 40px 36px 32px;
         }
 
         .card-header {
-            margin-bottom: 32px;
-            animation: fadeUp 0.6s 0.1s both;
+            margin-bottom: 24px;
         }
 
         .eyebrow {
-            font-size: 10px;
-            letter-spacing: 0.28em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
         }
 
         .eyebrow::before {
             content: '';
-            display: inline-block;
-            width: 20px;
-            height: 1px;
+            display: block;
+            width: 28px;
+            height: 2px;
             background: var(--accent);
-            opacity: 0.6;
-            flex-shrink: 0;
+            border-radius: 2px;
         }
 
         .card-header h1 {
-            font-size: 2rem;
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: 0.04em;
-            color: #fff;
-            line-height: 1.1;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+            margin-bottom: 6px;
         }
 
         .card-header p {
-            margin-top: 6px;
             font-size: 12px;
             color: var(--text-secondary);
-            letter-spacing: 0.04em;
+        }
+
+        /* ── Form ── */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        #login-error {
+            font-size: 12px;
+            color: #ff4d4d;
+            margin-bottom: 12px;
+            display: none;
+            letter-spacing: 0.02em;
         }
 
         .field {
-            margin-bottom: 16px;
-            animation: fadeUp 0.6s both;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
         }
-        .field:nth-child(1) { animation-delay: 0.15s; }
-        .field:nth-child(2) { animation-delay: 0.22s; }
 
         label {
-            display: block;
-            font-size: 11px;
-            letter-spacing: 0.16em;
+            font-size: 10px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-family: var(--font);
         }
 
         .input-wrap {
@@ -188,160 +211,171 @@
             align-items: center;
         }
 
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            width: 15px;
-            height: 15px;
-            opacity: 0.3;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            color: var(--text-primary);
-            flex-shrink: 0;
-        }
-
         input {
             width: 100%;
-            background: var(--surface);
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             color: var(--text-primary);
-            padding: 13px 14px 13px 42px;
-            font-size: 14px;
             font-family: var(--font);
+            font-size: 13px;
+            padding: 12px 14px 12px 40px;
             outline: none;
-            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
 
-        input::placeholder { color: rgba(255,255,255,0.18); }
+        input::placeholder {
+            color: #3a3a50;
+        }
 
         input:focus {
             border-color: var(--border-focus);
-            background: rgba(143,109,255,0.05);
-            box-shadow: 0 0 0 3px rgba(143,109,255,0.08);
+            background: rgba(143,109,255,0.06);
+            box-shadow: 0 0 0 3px rgba(143,109,255,0.12);
         }
 
-        input:focus ~ .input-icon { opacity: 0.7; }
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
 
+        /* ── Forgot password ── */
         .forgot {
-            display: block;
-            text-align: right;
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--accent);
             text-decoration: none;
-            margin-top: -4px;
-            margin-bottom: 20px;
-            letter-spacing: 0.04em;
-            transition: color 0.2s;
-            font-family: var(--font);
-            animation: fadeUp 0.6s 0.28s both;
-        }
-        .forgot:hover { color: var(--accent); }
-
-        #login-error {
-            display: none;
-            background: rgba(255,51,51,0.08);
-            border: 1px solid rgba(255,51,51,0.25);
-            border-radius: var(--radius);
-            color: #ff6b6b;
-            font-size: 12px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-            letter-spacing: 0.04em;
+            transition: opacity 0.2s;
         }
 
+        .forgot:hover {
+            opacity: 0.8;
+        }
+
+        /* ── Buttons ── */
         .btn-primary {
-            width: 100%;
-            padding: 13px 20px;
+            padding: 13px;
             background: var(--accent);
             color: #fff;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
             border: none;
             border-radius: var(--radius);
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-            animation: fadeUp 0.6s 0.32s both;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%);
+            transition: opacity 0.2s, box-shadow 0.2s, transform 0.15s;
+            margin-top: 8px;
         }
 
         .btn-primary:hover {
-            background: #a285ff;
-            box-shadow: 0 8px 32px var(--accent-glow);
+            opacity: 0.9;
+            box-shadow: 0 0 28px var(--accent-glow);
             transform: translateY(-1px);
         }
 
-        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
 
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-ghost {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: transparent;
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .btn-ghost:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255,255,255,0.18);
+        }
+
+        /* ── Divider ── */
         .divider {
             display: flex;
             align-items: center;
             gap: 12px;
             margin: 20px 0;
-            animation: fadeUp 0.6s 0.36s both;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
         }
-        .divider::before, .divider::after {
+
+        .divider::before,
+        .divider::after {
             content: '';
             flex: 1;
             height: 1px;
             background: var(--border);
         }
-        .divider span {
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
 
-        .btn-ghost {
-            width: 100%;
-            padding: 12px 20px;
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-family: var(--font);
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            transition: border-color 0.2s, color 0.2s, background 0.2s;
-            animation: fadeUp 0.6s 0.4s both;
-        }
-        .btn-ghost:hover {
-            border-color: var(--border-focus);
-            color: var(--accent);
-            background: var(--accent-dim);
-        }
-
+        /* ── Card footer ── */
         .card-footer {
-            padding: 16px 36px 20px;
-            border-top: 1px solid var(--border);
             text-align: center;
-            font-size: 11px;
-            color: rgba(255,255,255,0.15);
-            letter-spacing: 0.08em;
-            font-family: var(--font);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: #333345;
+            padding: 16px 36px;
+            border-top: 1px solid var(--border);
         }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: none; }
+        /* Responsive Design for All Devices */
+        @media (max-width: 480px) {
+            .page { padding: 80px 16px 30px; }
+            .card { width: 100%; max-width: calc(100vw - 32px); }
+            .card-body { padding: 24px 20px 20px; }
+            .card-header h1 { font-size: 1.5rem; }
+            .eyebrow { font-size: 9px; }
+            label { font-size: 10px; }
+            input { padding: 11px 12px 11px 38px; font-size: 13px; }
+            .btn-primary, .btn-ghost { font-size: 12px; padding: 11px 16px; }
+            .divider { margin: 16px 0; }
+            nav { padding: 1rem 3%; }
+            .logo { font-size: 1.2rem; letter-spacing: 2px; }
+            .nav-tag { font-size: 8px; }
+        }
+
+        @media (max-width: 768px) {
+            .page { padding: 90px 20px 35px; }
+            .card { width: min(90vw, 420px); }
+            .card-body { padding: 32px 28px 28px; }
+            .card-header h1 { font-size: 1.8rem; }
+            nav { padding: 1.2rem 4%; }
+            .logo { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 1024px) {
+            .page { padding: 95px 24px 40px; }
+            .card { width: min(95vw, 420px); }
+            nav { padding: 1.3rem 4.5%; }
+        }
+
+        @media (min-width: 1025px) {
+            .page { padding: 100px 24px 40px; }
+            .card { width: min(420px, calc(100vw - 40px)); }
+            nav { padding: 1.4rem 5%; }
         }
     </style>
 </head>

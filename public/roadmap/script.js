@@ -196,19 +196,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 2. Add 3D Mouse Tracking for Glass Cards
-    document.addEventListener("mousemove", (e) => {
-        let xAxis = (window.innerWidth / 2 - e.pageX) / 120;
-        let yAxis = (window.innerHeight / 2 - e.pageY) / 120;
-        const tiltCards = document.querySelectorAll('.tilt-card, .node-content');
-        
-        requestAnimationFrame(() => {
-            tiltCards.forEach(card => {
-                const rotateY = Math.max(-6, Math.min(6, -xAxis));
-                const rotateX = Math.max(-6, Math.min(6, yAxis));
-                card.style.transform = `translateZ(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        document.addEventListener("mousemove", (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 120;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 120;
+            const tiltCards = document.querySelectorAll('.tilt-card, .node-content');
+            
+            requestAnimationFrame(() => {
+                tiltCards.forEach(card => {
+                    const rotateY = Math.max(-6, Math.min(6, -xAxis));
+                    const rotateX = Math.max(-6, Math.min(6, yAxis));
+                    card.style.transform = `translateZ(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+                });
             });
         });
-    });
+    }
 
 
     // 3. Load & Process Roadmap Data (SMART FUZZY MATCHER)

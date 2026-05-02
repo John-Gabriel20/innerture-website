@@ -9,6 +9,115 @@
     <link href="https://fonts.googleapis.com/css2?family=Asimovian&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5">
+    <style>
+        /* Responsive Design for All Devices */
+        @media (max-width: 480px) {
+            nav { padding: 1rem 3%; }
+            .logo { font-size: 1.2rem; letter-spacing: 2px; }
+            .hero-content h1 { font-size: 1.8rem; }
+            .hero-content p { font-size: 0.95rem; }
+            .hero { padding: 80px 20px 40px; }
+            .content-section { padding: 2rem 1rem; }
+            .solid-card, .glass-card { padding: 1.5rem; }
+            h2 { font-size: 1.5rem; }
+            .roadmap-switch { 
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+                width: 100%;
+            }
+            .plan-btn { 
+                width: 100%;
+                min-width: unset;
+                padding: 0.8rem 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .roadmap-panel {
+                flex-direction: column;
+                width: 100%;
+                max-height: 60vh;
+                overflow-y: auto;
+                overflow-x: auto;
+                min-height: auto;
+            }
+            .roadmap-side {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: auto;
+                padding-right: 0.5rem;
+                min-width: 100%;
+            }
+            .roadmap-side ul {
+                padding-left: 1.5rem;
+            }
+            .roadmap-side li {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                font-size: 0.9rem;
+            }
+            #premium-buy-btn {
+                width: 100% !important;
+                min-width: unset !important;
+                margin-top: 1rem !important;
+                padding: 0.8rem 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .input-group { flex-direction: column; }
+            #analyze-btn { width: 100%; }
+            .modal-content { width: 90vw; max-width: calc(100vw - 20px); }
+            .paywall-price { font-size: 1.8rem; }
+            .paywall-features {
+                padding-left: 1.5rem;
+            }
+            .paywall-features li {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            nav { padding: 1.2rem 4%; }
+            .logo { font-size: 1.3rem; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content p { font-size: 1rem; }
+            .hero { padding: 100px 30px 50px; }
+            .content-section { padding: 2.5rem 1.5rem; }
+            .solid-card, .glass-card { padding: 2rem; overflow: hidden; }
+            h2 { font-size: 1.8rem; }
+            .modal-content { width: 95vw; max-width: 500px; }
+            .roadmap-switch {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                width: 100%;
+            }
+            .plan-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+            .roadmap-panel { flex-direction: column; }
+            .roadmap-side { width: 100%; }
+            #premium-buy-btn {
+                width: 100% !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            nav { padding: 1.3rem 4.5%; }
+            .hero-content h1 { font-size: 3rem; }
+            .content-section { padding: 3rem 2rem; }
+            .solid-card, .glass-card { padding: 2.5rem; }
+            .modal-content { width: 90vw; max-width: 550px; }
+        }
+
+        @media (min-width: 1025px) {
+            nav { padding: 1.4rem 5%; }
+            .content-section { padding: 3.5rem; }
+        }
+    </style>
 </head>
 <body>
     <canvas id="neural-canvas"></canvas>
