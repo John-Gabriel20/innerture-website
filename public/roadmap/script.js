@@ -1,6 +1,6 @@
-// --- THE ELITE MASTER DATABASE: ALL 12 JOBS ---
+
 const roadmapDatabase = {
-    // 1. CYBERSECURITY (Green #39ff14)
+    
     "digital-forensics": {
         category: "Cybersecurity", title: "Digital Forensics Analyst", themeColor: "#39ff14",
         steps: [
@@ -42,7 +42,7 @@ const roadmapDatabase = {
         ]
     },
 
-    // 2. CREATIVE MEDIA (Purple #b026ff)
+    
     "video-editor": {
         category: "Creative Media", title: "Video Editor", themeColor: "#b026ff",
         steps: [
@@ -84,7 +84,7 @@ const roadmapDatabase = {
         ]
     },
 
-    // 3. CREATIVE COMPUTING (Cyan #00f3ff)
+    
     "data-scientist": {
         category: "Creative Computing", title: "Data Scientist", themeColor: "#00f3ff",
         steps: [
@@ -129,20 +129,21 @@ const roadmapDatabase = {
 
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- SMART PREMIUM CHECK HELPER ---
-    // Instead of relying on a global 'isPremium' tag, we look inside the SPECIFIC user's profile.
+    
+    
     function checkPremiumStatus() {
+        let isPremium = localStorage.getItem('isPremium') === 'true';
         const userStr = localStorage.getItem('loggedInUser');
         if (userStr) {
             try {
                 const userObj = JSON.parse(userStr);
-                return userObj.isPremium === true;
-            } catch(e) { return false; }
+                if (userObj.isPremium) isPremium = true;
+            } catch(e) {}
         }
-        return false;
+        return isPremium;
     }
 
-    // 1. Initialize Neural Canvas Background
+    
     const canvas = document.getElementById("neural-canvas");
     const ctx = canvas ? canvas.getContext("2d") : null;
     let width, height, particles;
@@ -208,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener('resize', initCanvas);
     }
 
-    // 2. Add 3D Mouse Tracking for Glass Cards
+    
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         document.addEventListener("mousemove", (e) => {
             let xAxis = (window.innerWidth / 2 - e.pageX) / 120;
@@ -225,9 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. Load & Process Roadmap Data
+    
     let roleKey = localStorage.getItem('userPath');
-    const isPremium = checkPremiumStatus(); // Replaced the generic check!
+    const isPremium = checkPremiumStatus(); 
 
     let data = null;
 
@@ -251,14 +252,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return; 
     }
     
-    // Set Base Styling
+    
     document.documentElement.style.setProperty('--theme-color', data.themeColor);
     const catBadge = document.getElementById('category-badge');
     if (catBadge) catBadge.innerText = data.category;
     const roleTitleEl = document.getElementById('role-title');
     if (roleTitleEl) roleTitleEl.innerText = data.title;
 
-    // --- PREMIUM FEATURE: LOCALIZATION ---
+    
     if (isPremium) {
         const locBanner = document.getElementById('localization-banner');
         const locText = document.getElementById('loc-text');
@@ -283,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- RENDER TIMELINE: INCLUDES 5 STEPS & PREMIUM CONTENT ---
+    
     const timelineContainer = document.getElementById('timeline-container');
 
     if (timelineContainer) {
@@ -374,9 +375,9 @@ document.addEventListener("DOMContentLoaded", () => {
         initProgressTracking();
         if(pdfBtn) {
             pdfBtn.classList.remove('hidden');
-            // FIXED THE PDF DOWNLOAD LOGIC
+            
             pdfBtn.addEventListener('click', () => {
-                // Open all hidden details
+                
                 document.querySelectorAll('details').forEach(el => el.setAttribute('open', 'true'));
                 document.body.classList.add('is-printing');
                 document.querySelectorAll('.tilt-card').forEach(c => {
@@ -392,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // --- NAV PREMIUM VERIFICATION & MODALS ---
+    
     const simNav = document.getElementById('roadmap-sim-nav');
     const realityNav = document.getElementById('roadmap-reality-nav');
     const premiumModal = document.getElementById('premium-required-modal');
@@ -402,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const paywallBuyBtn = document.getElementById('paywall-buy-btn');
     const paywallCancelBtn = document.getElementById('paywall-cancel-btn');
     
-    // Engine Nav Modal Hooks
+    
     const engineNav = document.getElementById('engine-nav-link');
     const engineModal = document.getElementById('engine-modal');
     const engineCloseBtn = document.getElementById('engine-close-btn');
@@ -433,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleNavClick(e) {
-        const isUserPremium = checkPremiumStatus(); // Replaced generic check!
+        const isUserPremium = checkPremiumStatus(); 
         if (!isUserPremium) {
             e.preventDefault(); 
             showModal(premiumModal);
@@ -464,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (paywallBuyBtn) {
         paywallBuyBtn.addEventListener('click', () => {
-            // FIXED: Attach Premium status ONLY to the currently logged-in user
+            
             const userStr = localStorage.getItem('loggedInUser');
             if (userStr) {
                 try {
@@ -486,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // --- ENGINE API LOGIC (Inside Roadmap Page) ---
+    
     const inputField = document.getElementById("strength-input");
     const analyzeBtn = document.getElementById("analyze-btn");
     const resultArea = document.getElementById("result-area");
@@ -613,7 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// --- PROGRESS TRACKING, TOAST NOTIFICATIONS & SPARKLES ---
+
 function createSparkles(x, y, color) {
     for(let i=0; i<12; i++) {
         let spark = document.createElement('div');
@@ -656,7 +657,7 @@ function initProgressTracking() {
         const percentage = Math.round((completedSteps / totalSteps) * 100);
         if (globalProgressFill) {
             globalProgressFill.style.width = `${percentage}%`;
-            // Add a pulse effect if progress is active
+            
             if (percentage > 0) globalProgressFill.classList.add('active');
         }
         if (progressText) progressText.innerText = `${percentage}%`;
@@ -674,7 +675,7 @@ function initProgressTracking() {
         btn.addEventListener('click', function(e) {
             if (this.classList.contains('completed')) return;
             
-            // Trigger Visual Explosion
+            
             const rect = this.getBoundingClientRect();
             const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim() || '#fff';
             createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, themeColor);

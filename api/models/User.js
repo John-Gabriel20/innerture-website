@@ -1,20 +1,14 @@
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    }
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    isPremium: { type: Boolean, default: false },
+    userPath: { type: String, default: 'unknown' },
+    completedSteps: { type: [String], default: [] }
+}, { 
+    timestamps: true 
 });
 
-// Avoid OverwriteModelError in serverless functions
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+export default mongoose.models.User || mongoose.model('User', userSchema);

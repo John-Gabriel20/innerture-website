@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
 
-        /* ── Starfield canvas ── */
+        
         #neural-canvas {
             position: fixed;
             inset: 0;
@@ -46,7 +46,7 @@
             pointer-events: none;
         }
 
-        /* ── Nav ── */
+        
         nav.top-nav {
             position: relative;
             z-index: 10;
@@ -77,7 +77,7 @@
             color: var(--text-secondary);
         }
 
-        /* ── Center layout ── */
+        
         .page-center {
             position: relative;
             z-index: 10;
@@ -88,7 +88,7 @@
             padding: 40px 24px;
         }
 
-        /* ── Card ── */
+        
         .auth-card {
             width: 100%;
             max-width: 440px;
@@ -107,7 +107,7 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ── Eyebrow ── */
+        
         .eyebrow {
             display: flex;
             align-items: center;
@@ -141,7 +141,7 @@
             margin-bottom: 28px;
         }
 
-        /* ── Fields ── */
+        
         .field-group {
             margin-bottom: 16px;
         }
@@ -194,7 +194,7 @@
             box-shadow: 0 0 0 3px rgba(143,109,255,0.12);
         }
 
-        /* ── Error ── */
+        
         .error-msg {
             font-size: 11px;
             color: #ff4d4d;
@@ -203,7 +203,7 @@
             letter-spacing: 0.02em;
         }
 
-        /* ── Divider ── */
+        
         .divider {
             display: flex;
             align-items: center;
@@ -222,7 +222,7 @@
             background: var(--border);
         }
 
-        /* ── Buttons ── */
+        
         .btn-primary {
             display: block;
             width: 100%;
@@ -270,7 +270,7 @@
             border-color: rgba(255,255,255,0.18);
         }
 
-        /* ── Footer note ── */
+        
         .card-footer {
             margin-top: 20px;
             text-align: center;
@@ -278,7 +278,7 @@
             letter-spacing: 0.04em;
             color: #333345;
         }
-        /* ── Mobile (≤480px) ── */
+        
         @media (max-width: 480px) {
             nav.top-nav {
                 padding: 1rem 4%;
@@ -357,7 +357,7 @@
             }
         }
 
-        /* ── Tablet (481px - 768px) ── */
+        
         @media (min-width: 481px) and (max-width: 768px) {
             nav.top-nav {
                 padding: 1.2rem 4%;
@@ -411,7 +411,7 @@
             }
         }
 
-        /* ── Laptop (769px - 1024px) ── */
+        
         @media (min-width: 769px) and (max-width: 1024px) {
             nav.top-nav {
                 padding: 1.3rem 4%;
@@ -430,9 +430,9 @@
             }
         }
 
-        /* ── Desktop (1025px+) ── */
+        
         @media (min-width: 1025px) {
-            /* Default styles already optimized for desktop */
+            
         }
     </style>
 </head>
@@ -493,7 +493,7 @@
     </div>
 
     <script>
-        /* ── Starfield ── */
+        
         (function () {
             const canvas = document.getElementById('neural-canvas');
             const ctx = canvas.getContext('2d');
@@ -534,7 +534,7 @@
             resize(); makeStars(160); draw();
         })();
 
-        /* ── Form ── */
+        
         document.getElementById('registerBtn').addEventListener('click', async function () {
             const name  = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();

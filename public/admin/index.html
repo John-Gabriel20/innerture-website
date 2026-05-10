@@ -28,7 +28,7 @@
         }
  
         html, body {
-            /* Ensure the body acts as a container for the fixed canvas */
+            
             position: relative;
             min-height: 100%;
             background: var(--bg);
@@ -36,7 +36,7 @@
             font-family: var(--font);
             font-size: 14px;
             line-height: 1.6;
-            /* Remove hidden overflow that crops fixed elements */
+            
             overflow-x: visible; 
             overflow-y: auto;
         }
@@ -71,7 +71,7 @@
         }
         .logo span { color: var(--accent); }
  
-        /* ── Shell ── */
+        
         main.shell {
             position: relative;
             z-index: 10;
@@ -80,7 +80,7 @@
             padding: 0 24px;
         }
  
-        /* ── Page header ── */
+        
         .page-header {
             display: flex;
             align-items: flex-end;
@@ -107,10 +107,7 @@
             color: var(--text-primary);
         }
  
-        /* ────────────────────────────────────────
-           BUTTONS — no transition, no transform,
-           no animation on any state
-        ──────────────────────────────────────── */
+        
         .primary-btn,
         .secondary-btn,
         .danger-btn {
@@ -128,7 +125,7 @@
             cursor: pointer;
             white-space: nowrap;
  
-            /* Hard-off all motion */
+            
             transition: none !important;
             transform: none !important;
             animation: none !important;
@@ -159,7 +156,7 @@
         .danger-btn:hover { background: rgba(255, 85, 85, 0.1); }
         .danger-btn:active { background: rgba(255, 85, 85, 0.18); }
  
-        /* ── Glass card ── */
+        
         .glass-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -168,7 +165,7 @@
             backdrop-filter: blur(8px);
         }
  
-        /* ── Table ── */
+        
         .table-wrap { width: 100%; overflow-x: auto; }
  
         .admin-table {
@@ -207,14 +204,14 @@
  
         .admin-table td:nth-child(2) { color: var(--text-secondary); }
  
-        /* ── Action group ── */
+        
         .action-group {
             display: flex;
             align-items: center;
             gap: 8px;
         }
  
-        /* ── Empty state ── */
+        
         .empty-state {
             text-align: center;
             color: var(--text-secondary);
@@ -253,7 +250,7 @@
                             </tr>
                         </thead>
                         <tbody id="userTableBody">
-                            <!-- rows injected by script.js -->
+                            
                         </tbody>
                     </table>
                 </div>

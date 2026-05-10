@@ -1,12 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 
-// FIXED 1: The NEW SDK requires the object syntax if you use a custom key name
 const ai = new GoogleGenAI({ apiKey: process.env.MY_SECRET_API_KEY });
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
 
-    // Safety check so Vercel doesn't fail silently
     if (!process.env.MY_SECRET_API_KEY) {
         console.error("API Key is missing in Vercel Environment Variables");
         return res.status(500).json({ error: "Missing API Key" });
@@ -32,16 +30,13 @@ export default async function handler(req, res) {
             CRITICAL: Return ONLY valid JSON. Do not use markdown formatting, do not use backticks, and do not include any other words.
         `;
 
-        // FIXED 2: The NEW SDK uses ai.models.generateContent
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
         });
 
-        // FIXED 3: In the NEW SDK, .text is a property, not a function ()
         let text = response.text;
         
-        // Clean up accidental AI markdown
         text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
         const cleanData = JSON.parse(text);

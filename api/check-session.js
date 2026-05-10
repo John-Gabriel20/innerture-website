@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from 'app/models/user.js'; // Assuming the user model is in a separate file
+import User from 'app/models/user.js';
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
-        const userEmail = req.cookies.userEmail; // Assuming user email is stored in cookies
+        const userEmail = req.cookies.userEmail;
 
         if (!userEmail) {
             return res.status(200).json({ isLoggedIn: false });

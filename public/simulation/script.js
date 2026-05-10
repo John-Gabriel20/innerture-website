@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // --- 1. THE CONTENT DATA (12 SPECIALIZED SIMULATIONS) ---
-    // Keys are now perfectly mapped to the Discovery Engine's output slugs
+    
+    
     const jobData = {
         "penetration-tester": {
             accent:     "#ff4d6d",
@@ -172,14 +172,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Load correct job based on Roadmap data, fallback to penetration-tester
+    
     let path = localStorage.getItem('userPath');
     if (!path || !jobData[path]) {
         path = 'penetration-tester';
     }
     const current = jobData[path];
 
-    // --- 2. NEURAL MATRIX BACKGROUND ---
+    
     const canvas = document.getElementById("neural-canvas");
     const ctx = canvas ? canvas.getContext("2d") : null;
     let width, height, particles;
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener('resize', initCanvas);
     }
 
-    // --- 3. UI & TAB LOGIC ---
+    
     const tablet = document.querySelector(".work-tablet");
     const slider = document.querySelector('.tab-slider');
     const progressBar = document.querySelector('.scroll-progress');
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateScrollProgress();
     };
 
-    // Hacker text typing effect
+    
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
     function cipherEffect(element, finalString) {
         if (!element || !finalString) return;
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 30);
     }
 
-    // Submission Logic
+    
     window.submitProposal = () => {
         const proposal = document.getElementById('proposal').value;
         if(!proposal.trim()) {
@@ -321,7 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // --- 4. ENGINE MODAL LOGIC (ADDED) ---
+    
     const engineNav = document.getElementById('engine-nav-link');
     const engineModal = document.getElementById('engine-modal');
     const engineCloseBtn = document.getElementById('engine-close-btn');
@@ -463,13 +463,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     accuracy: applyRoadmapBtn.dataset.tempAccuracy,
                     reason: applyRoadmapBtn.dataset.tempReason
                 }));
-                // Reload the page to load the new simulation!
+                
                 window.location.reload(); 
             }
         });
     }
 
-    // --- 5. BOOT AND INITIALIZE DATA ---
+    
     function boot() {
         document.documentElement.style.setProperty('--accent', current.accent);
         document.documentElement.style.setProperty('--accent-dim', current.accentDim);
@@ -520,6 +520,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 100);
     }
 
-    // Run Boot
+    
     boot();
 });

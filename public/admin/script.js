@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // ── Always init canvas regardless of which page we're on ──
+    
     initBackgroundCanvas();
 
-    // ── Index page: load user table ──
+    
     if (document.getElementById('userTableBody')) {
         await loadUsers();
     }
 
-    // ── Add User page ──
+    
     if (document.getElementById('addUserForm')) {
         document.getElementById('addUserForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ── Edit User page ──
+    
     if (document.getElementById('editUserForm')) {
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Load the user to pre-fill the form
+        
         let user = null;
 
         try {
@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('userId').value = user._id;
             document.getElementById('name').value   = user.name;
             document.getElementById('email').value  = user.email;
-            // Password intentionally left blank for security
+            
         }
 
-        // Handle form submission
+        
         document.getElementById('editUserForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const email    = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            // Only include password if the user typed a new one
+            
             const payload = { name, email };
             if (password) payload.password = password;
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// ── Load and render user table ──
+
 async function loadUsers() {
     let users = [];
 
@@ -160,7 +160,7 @@ async function loadUsers() {
     });
 }
 
-// ── Delete a user ──
+
 async function deleteUser(id) {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
@@ -181,7 +181,7 @@ async function deleteUser(id) {
     window.location.reload();
 }
 
-// ── Animated particle background ──
+
 function initBackgroundCanvas() {
     const canvas = document.getElementById('neural-canvas');
     if (!canvas) return;

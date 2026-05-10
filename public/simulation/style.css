@@ -1,4 +1,4 @@
-/* --- 1. Variables & Global Reset --- */
+
 :root {
     --bg: #08090d;
     --border: rgba(255,255,255,0.08);
@@ -38,7 +38,7 @@ body {
         radial-gradient(ellipse 30% 50% at 10% 80%, var(--accent-dim) 0%, transparent 60%);
 }
 
-/* --- 2. Interactive Layers --- */
+
 #neural-canvas {
     position: fixed;
     inset: 0;
@@ -48,7 +48,7 @@ body {
     pointer-events: none;
 }
 
-/* Neon Scroll Progress Line */
+
 .scroll-progress {
     position: fixed;
     top: 0;
@@ -61,7 +61,7 @@ body {
     transition: width 0.1s ease-out, background 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* --- 3. Navigation --- */
+
 nav {
     position: relative;
     z-index: 10;
@@ -141,7 +141,7 @@ nav {
     border-color: rgba(255, 255, 255, 0.4); 
     color: #fff; }
 
-/* --- 4. SHELL --- */
+
 .shell {
     flex: 1;
     display: flex;
@@ -151,7 +151,7 @@ nav {
     z-index: 10;
 }
 
-/* --- 5. The Work Tablet Container --- */
+
 .work-tablet {
     width: 100%;
     max-width: 1180px;
@@ -238,7 +238,7 @@ nav {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 7. Content Elements --- */
+
 h2 { 
     font-family: "Chakra Petch", sans-serif;
     font-weight: 700;
@@ -341,7 +341,7 @@ textarea:focus {
 
 .toast.show { opacity: 1; }
 
-/* --- 8. Added Modal Styles --- */
+
 .hidden { display: none !important; }
 
 .modal-overlay {

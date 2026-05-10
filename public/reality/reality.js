@@ -1,6 +1,6 @@
-// --- 1. THE CONTENT DATA (REALITY FEED REVIEWS) ---
+
 const careerData = {
-  // --- CYBERSECURITY ---
+  
   'digital-forensics': {
     name:'Digital Forensics', 
     accent:'#8f6dff',
@@ -74,7 +74,7 @@ const careerData = {
     ]
   },
 
-  // --- CREATIVE MEDIA ---
+  
   'video-editor': {
     name:'Video Editor', 
     accent:'#00d3ff',
@@ -148,7 +148,7 @@ const careerData = {
     ]
   },
 
-  // --- CREATIVE COMPUTING ---
+  
   'data-scientist': {
     name:'Data Scientist', 
     accent:'#7b55ff',
@@ -223,9 +223,7 @@ const careerData = {
   }
 };
 
-/* ══════════════════════════════════════════════
-   HELPERS
-══════════════════════════════════════════════ */
+
 
 function calcMetrics(reviews) {
   const allSalaries = reviews.flatMap(r => r.salary);
@@ -256,9 +254,7 @@ function ratingPips(n) {
   return `<div class="rating-wrap">${pips}<div class="rating-num">${n} / 10</div></div>`;
 }
 
-/* ══════════════════════════════════════════════
-   TAB SWITCH
-══════════════════════════════════════════════ */
+
 
 window.switchTab = (e, id) => {
   document.querySelectorAll('.tab-section').forEach(s => {
@@ -275,9 +271,7 @@ window.switchTab = (e, id) => {
   sl.style.width = e.currentTarget.offsetWidth + 'px';
 };
 
-/* ══════════════════════════════════════════════
-   CARD EXPAND / COLLAPSE
-══════════════════════════════════════════════ */
+
 
 window.toggleCard = function(clickedCard) {
   const isOpen = clickedCard.classList.contains('expanded');
@@ -326,12 +320,10 @@ function collapseCard(card) {
   }, 400);
 }
 
-/* ══════════════════════════════════════════════
-   RENDER FEED
-══════════════════════════════════════════════ */
+
 
 function renderFeed(path) {
-  // Defensive check in case user bypasses the engine
+  
   if (!careerData[path]) {
       path = 'penetration-tester';
   }
@@ -387,7 +379,7 @@ function renderFeed(path) {
     }, i * 80 + 50);
   });
 
-  // Sidebar Updates
+  
   const metrics = calcMetrics(data.reviews);
   const maxSal  = 130;
   const sidebar = document.getElementById('sidebar-stats');
@@ -429,9 +421,7 @@ function renderFeed(path) {
   }, 350);
 }
 
-/* ══════════════════════════════════════════════
-   RENDER ANALYTICS
-══════════════════════════════════════════════ */
+
 
 function renderAnalytics(path) {
   if (!careerData[path]) {
@@ -467,9 +457,7 @@ function renderAnalytics(path) {
     </tr>`).join('');
 }
 
-/* ══════════════════════════════════════════════
-   NEURAL CANVAS
-══════════════════════════════════════════════ */
+
 
 const canvas = document.getElementById('neural-canvas');
 const ctx    = canvas ? canvas.getContext('2d') : null;
@@ -518,13 +506,11 @@ function animateCanvas() {
   requestAnimationFrame(animateCanvas);
 }
 
-/* ══════════════════════════════════════════════
-   CHANGE PATH & BOOT
-══════════════════════════════════════════════ */
+
 
 window.changePath = (newPath) => {
   if (!careerData[newPath]) {
-      newPath = 'penetration-tester'; // Fallback
+      newPath = 'penetration-tester'; 
   }
   const data = careerData[newPath];
 
@@ -551,10 +537,10 @@ document.addEventListener("DOMContentLoaded", () => {
     animateCanvas();
     window.addEventListener('resize', initCanvas);
 
-    // Grab the exact slug the user got from the engine
+    
     let userPath = localStorage.getItem('userPath');
     
-    // Fuzzy matching fallback just in case the slug is slightly off
+    
     if (userPath && userPath !== "unknown" && !careerData[userPath]) {
         const cleanUserPath = userPath.replace(/[^a-z0-9]/g, '');
         for (let key of Object.keys(careerData)) {
@@ -577,7 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, 60);
 });
-// --- DISCOVERY ENGINE MODAL LOGIC ---
+
 document.addEventListener("DOMContentLoaded", () => {
     const engineNav = document.getElementById('engine-nav-link');
     const engineModal = document.getElementById('engine-modal');
@@ -622,7 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === engineModal) hideEngineModal();
     });
 
-    // --- ENGINE API LOGIC ---
+    
     const inputField = document.getElementById("strength-input");
     const analyzeBtn = document.getElementById("analyze-btn");
     const resultArea = document.getElementById("result-area");

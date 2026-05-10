@@ -1,4 +1,4 @@
-// ── Background canvas ──
+
 function initBackgroundCanvas() {
     const canvas = document.getElementById('neural-canvas');
     if (!canvas) return;
@@ -71,7 +71,7 @@ function initBackgroundCanvas() {
     tick();
 }
 
-// ── Login form ──
+
 function initLoginForm() {
     const form = document.getElementById('loginForm');
     if (!form) return;
@@ -115,7 +115,7 @@ function initLoginForm() {
     });
 }
 
-// ── Init on DOM ready ──
+
 document.addEventListener('DOMContentLoaded', () => {
     initBackgroundCanvas();
     initLoginForm();

@@ -55,7 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (paywallBuyBtn) {
         paywallBuyBtn.addEventListener('click', () => {
+            const userStr = localStorage.getItem('loggedInUser');
+            if (userStr) {
+                try {
+                    const userObj = JSON.parse(userStr);
+                    userObj.isPremium = true; 
+                    localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+                } catch(e) { console.error('Failed to update user profile:', e); }
+            }
             localStorage.setItem('isPremium', 'true'); 
+
             updatePremiumContent();
             showModal('Purchase Successful', 'Your premium access is now active! Enjoy the full Innerture experience.', 'Continue', hidePaywall);
         });
@@ -373,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: 0.2 });
     revealCards.forEach(card => revealObserver.observe(card));
 
-    // --- UPDATED SIGN-IN LOGIC & NAVIGATION INTERCEPTION ---
+    
     const loggedInUserStr = localStorage.getItem('loggedInUser');
     const navRoadmapItem = document.getElementById('nav-roadmap-item');
     
@@ -396,6 +405,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     logoutBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         localStorage.removeItem('loggedInUser');
+                        localStorage.removeItem('isPremium');
+                        localStorage.removeItem('userPath');
+                        localStorage.removeItem('courseData');
                         window.location.reload();
                     });
                 }
@@ -405,16 +417,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // INTERCEPT NAV ROADMAP CLICK: Ensure they only go if they have a role saved
+    
     if (navRoadmapItem) {
         const navRoadmapLinkAnchor = navRoadmapItem.querySelector('a');
         if (navRoadmapLinkAnchor) {
             navRoadmapLinkAnchor.addEventListener('click', (e) => {
-                e.preventDefault(); // Stop normal redirection
+                e.preventDefault(); 
                 
                 let storedPath = localStorage.getItem('userPath');
                 
-                // Fallback: If they haven't explicitly set userPath but DID take the quiz
+                
                 if (!storedPath || storedPath === 'unknown') {
                     const courseDataStr = localStorage.getItem('courseData');
                     if (courseDataStr) {
@@ -428,11 +440,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // If they have a valid job assigned, let them through!
+                
                 if (storedPath && storedPath !== 'unknown') {
                     window.location.href = '/roadmap/index.html';
                 } else {
-                    // Alert them and drag them to the quiz
+                    
                     alert("You haven't generated your personalized roadmap yet! Please run the Discovery Engine first.");
                     const discoverySection = document.getElementById('discovery');
                     if (discoverySection) {
@@ -564,7 +576,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const premiumSections = document.querySelectorAll('.premium-content');
     
     function updatePremiumContent() {
-        const isPremium = localStorage.getItem('isPremium') === 'true';
+        let isPremium = localStorage.getItem('isPremium') === 'true';
+        
+        const userStr = localStorage.getItem('loggedInUser');
+        if (userStr) {
+            try {
+                const userObj = JSON.parse(userStr);
+                if (userObj.isPremium) isPremium = true;
+            } catch(e) {}
+        }
         
         premiumSections.forEach(section => {
             if (isPremium) {
