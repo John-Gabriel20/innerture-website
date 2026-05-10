@@ -464,16 +464,41 @@ document.addEventListener("DOMContentLoaded", () => {
     if (paywallCancelBtn) paywallCancelBtn.addEventListener('click', hideModals);
 
     if (paywallBuyBtn) {
-        paywallBuyBtn.addEventListener('click', () => {
+        paywallBuyBtn.addEventListener('click', async () => {
             
             const userStr = localStorage.getItem('loggedInUser');
+            let email = null;
+            let userObj = null;
+            
             if (userStr) {
                 try {
-                    const userObj = JSON.parse(userStr);
+                    userObj = JSON.parse(userStr);
+                    email = userObj.email;
+                } catch(e) { console.error('Failed to parse user profile:', e); }
+            }
+
+            if (email) {
+                paywallBuyBtn.innerText = 'Processing...';
+                paywallBuyBtn.disabled = true;
+                try {
+                    const res = await fetch('/api/upgrade-premium', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
+                    if (res.ok) {
+                        userObj.isPremium = true;
+                        localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+                    }
+                } catch (e) { console.error('Failed to update DB:', e); }
+                paywallBuyBtn.innerText = 'Complete Purchase';
+                paywallBuyBtn.disabled = false;
+            } else if (userObj) {
                     userObj.isPremium = true; 
                     localStorage.setItem('loggedInUser', JSON.stringify(userObj));
-                } catch(e) { console.error('Failed to update user profile:', e); }
             }
+            
+            localStorage.setItem('isPremium', 'true');
             
             hideModals();
             alert('Purchase Successful! Access Unlocked.');
